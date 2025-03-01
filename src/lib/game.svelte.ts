@@ -181,8 +181,8 @@ export function initGame() {
 
 	const player = $state<Entity>({
 		id: 'player',
-		x: 0,
-		y: 0,
+		x: 7,
+		y: 7,
 		player: true,
 		team: 'player',
 		attack: { damage: 2 },
@@ -191,9 +191,9 @@ export function initGame() {
 	});
 	game.add(player);
 
-	const goblin = $state<Entity>(createFromTemplate('goblin', { x: 10, y: 10 }));
+	const goblin = $state<Entity>(createFromTemplate('goblin', { x: 2, y: 3 }));
 	game.add(goblin);
 
-	const goblin2 = $state<Entity>(createFromTemplate('goblin', { x: 15, y: 20 }));
+	const goblin2 = $state<Entity>(createFromTemplate('goblin', { x: 12, y: 10 }));
 	game.add(goblin2);
 }

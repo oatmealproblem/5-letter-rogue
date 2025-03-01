@@ -3,8 +3,19 @@
 
 @import '@skeletonlabs/skeleton';
 @import '@skeletonlabs/skeleton/optional/presets';
-@import '@skeletonlabs/skeleton/themes/concord';
+@import '@skeletonlabs/skeleton/themes/terminus';
 
 @source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+	font-family: 'Kablammo';
+	src: url('./assets/fonts/Kablammo-Regular-VariableFont_MORF.ttf');
+}
+
+@keyframes morph {
+	50% {
+		font-variation-settings: 'MORF' 60;
+	}
+}

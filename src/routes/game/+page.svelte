@@ -10,7 +10,7 @@
 	import { game } from '$lib/game.svelte';
 	import { posToString } from '$lib/geo';
 	import { rangeFromTo } from '$lib/math';
-	import { type Ability,type Pos } from '$lib/types';
+	import { type Ability, type Pos } from '$lib/types';
 
 	let activeAbility = $state.raw<null | Ability>(null);
 	let mousePos = $state.raw<null | Pos>(null);
@@ -154,7 +154,7 @@
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<span
 						class="text-surface-300-700 inline-block text-center select-none"
-						class:bg-primary-100-900={highlighted?.guide.some(
+						class:bg-primary-200-800={highlighted?.guide.some(
 							(pos) => pos.x === x && pos.y === y,
 						) && !highlighted?.hit.some((pos) => pos.x === x && pos.y === y)}
 						class:bg-error-200-800={highlighted?.hit.some((pos) => pos.x === x && pos.y === y)}
@@ -190,12 +190,16 @@
 				style:width="{100 / MAP_WIDTH}vmin"
 				style:height="{100 / MAP_HEIGHT}vmin"
 				style:font-size="{100 / MAP_WIDTH / 1.5}vmin"
+				style:font-family="Kablammo"
+				style:font-variation-settings="'MORF' 0"
+				style:font-style="oblique 1deg"
+				style:animation="morph 10s linear infinite"
 				out:blur
 			>
 				{entity.glyph?.char}
 				{#if entity.hp}
 					<span
-						class="bg-secondary-300-700 absolute bottom-0 left-0 h-1"
+						class="bg-error-300-700 absolute bottom-0 left-0 h-1"
 						style:width="{(entity.hp.current / entity.hp.max) * 100}%"
 					></span>
 				{/if}
