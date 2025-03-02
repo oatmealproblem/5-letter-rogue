@@ -6,6 +6,7 @@
 
 	import actions from '$lib/actions';
 	import { playSound } from '$lib/audio';
+	import HelpMenu from '$lib/components/HelpMenu.svelte';
 	import { MAP_HEIGHT, MAP_WIDTH } from '$lib/constants';
 	import { game, initGame } from '$lib/game.svelte';
 	import { posToString } from '$lib/geo';
@@ -158,7 +159,7 @@
 	{/snippet}
 </Modal>
 
-<div class="flex flex-wrap">
+<div class="flex flex-wrap justify-center">
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		class="bg-surface-50-950 relative flex flex-col"
@@ -242,8 +243,12 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="w-0 max-w-112 shrink grow p-4">
+	<div class="bg-surface-100-900 w-0 max-w-112 shrink grow p-4">
 		{#if player?.hp?.current}
+			<section class="flex">
+				<h1 class="h6 grow">Level 1</h1>
+				<HelpMenu />
+			</section>
 			<section>
 				<span class="text-success-700-300">HP: {player.hp.current}/{player.hp.max}</span>
 				<div>
