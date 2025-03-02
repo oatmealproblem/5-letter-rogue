@@ -13,7 +13,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint": "prettier --check . && eslint .",
+		"convert-audio": "cd src/lib/audio && for i in *.ogg; do ffmpeg -i \"$i\" \"${i%.*}.webm\" && rm \"$i\"; done"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -39,6 +40,7 @@
 		"prettier-plugin-svelte": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"priorityqueuejs": "^2.0.0",
+		"rot-js": "^2.2.1",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^4.0.0",

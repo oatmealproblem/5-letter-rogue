@@ -3,6 +3,7 @@ import { getLine } from '$lib/geo';
 import type { Ability } from '$lib/types';
 
 export const shoot: Ability = {
+	name: 'shoot',
 	target: 'tile',
 	highlight(actor, targetPos, game) {
 		const line = getLine(actor, targetPos);

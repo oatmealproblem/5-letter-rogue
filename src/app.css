@@ -9,6 +9,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+[disabled] {
+	cursor: not-allowed;
+}
+
 @font-face {
 	font-family: 'Kablammo';
 	src: url('./assets/fonts/Kablammo-Regular-VariableFont_MORF.ttf');
@@ -18,4 +22,16 @@
 	50% {
 		font-variation-settings: 'MORF' 60;
 	}
+}
+
+.font-creature {
+	font-family: 'Kablammo';
+	font-variation-settings: 'MORF' 0;
+	font-style: oblique 1deg;
+	animation: morph 10s linear infinite;
+}
+
+.font-letter {
+	scale: 0.75;
+	font-weight: bold;
 }

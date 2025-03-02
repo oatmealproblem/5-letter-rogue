@@ -3,6 +3,7 @@ import { getPosInRange } from '$lib/geo';
 import type { Ability } from '$lib/types';
 
 export const blast: Ability = {
+	name: 'blast',
 	target: 'tile',
 	highlight(actor, targetPos, game) {
 		const guide = getPosInRange(targetPos, 3, 'euclidean');

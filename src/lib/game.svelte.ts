@@ -61,20 +61,21 @@ export class Game {
 	};
 
 	add(entity: Entity): Entity {
-		const proxy = new Proxy(entity, this.#proxyHandler);
-		this.#entities.set(entity.id, entity);
-		this.#proxies.set(entity, proxy);
-		const posKey = `${entity.x},${entity.y}`;
+		const stateful = $state(entity);
+		const proxy = new Proxy(stateful, this.#proxyHandler);
+		this.#entities.set(stateful.id, stateful);
+		this.#proxies.set(stateful, proxy);
+		const posKey = `${stateful.x},${stateful.y}`;
 		if (this.#entitiesByPosition.has(posKey)) {
-			this.#entitiesByPosition.get(posKey)?.add(entity);
+			this.#entitiesByPosition.get(posKey)?.add(stateful);
 		} else {
-			this.#entitiesByPosition.set(posKey, new SvelteSet([entity]));
+			this.#entitiesByPosition.set(posKey, new SvelteSet([stateful]));
 		}
-		for (const component of Object.keys(entity).filter((key) => !GUARANTEED_KEYS.has(key))) {
+		for (const component of Object.keys(stateful).filter((key) => !GUARANTEED_KEYS.has(key))) {
 			if (this.#entitiesByComponent.has(component)) {
-				this.#entitiesByComponent.get(component)?.add(entity);
+				this.#entitiesByComponent.get(component)?.add(stateful);
 			} else {
-				this.#entitiesByComponent.set(component, new SvelteSet([entity]));
+				this.#entitiesByComponent.set(component, new SvelteSet([stateful]));
 			}
 		}
 		return proxy;
@@ -179,21 +180,24 @@ game.registerSfxHandler(playSound);
 export function initGame() {
 	game.reset();
 
-	const player = $state<Entity>({
+	const player: Entity = {
 		id: 'player',
 		x: 7,
 		y: 7,
 		player: true,
 		team: 'player',
 		attack: { damage: 2 },
-		glyph: { char: '@', color: 'white' },
+		glyph: { char: '@', class: 'font-creature text-white z-50' },
 		hp: { current: 10, max: 10 },
-	});
+		inventory: { a: 1, b: 2, l: 1, s: 1, t: 1 },
+	};
 	game.add(player);
 
-	const goblin = $state<Entity>(createFromTemplate('goblin', { x: 2, y: 3 }));
-	game.add(goblin);
+	const snake = createFromTemplate('snake', { x: 2, y: 3 });
+	game.add(snake);
 
-	const goblin2 = $state<Entity>(createFromTemplate('goblin', { x: 12, y: 10 }));
-	game.add(goblin2);
+	const snake2 = createFromTemplate('snake', { x: 12, y: 10 });
+	game.add(snake2);
+
+	game.save();
 }

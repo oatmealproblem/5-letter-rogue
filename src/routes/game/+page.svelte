@@ -4,14 +4,17 @@
 	import { SvelteMap } from 'svelte/reactivity';
 	import { blur, fly } from 'svelte/transition';
 
-	import abilities from '$lib/abilities';
 	import actions from '$lib/actions';
+	import { playSound } from '$lib/audio';
 	import { MAP_HEIGHT, MAP_WIDTH } from '$lib/constants';
-	import { game } from '$lib/game.svelte';
+	import { game, initGame } from '$lib/game.svelte';
 	import { posToString } from '$lib/geo';
 	import { rangeFromTo } from '$lib/math';
-	import { type Ability, type Pos } from '$lib/types';
+	import { type Ability, type Letter, type Pos } from '$lib/types';
 
+	import Inventory from './Inventory.svelte';
+
+	let spelling = $state<string | null>(null);
 	let activeAbility = $state.raw<null | Ability>(null);
 	let mousePos = $state.raw<null | Pos>(null);
 	let player = $derived(game.get('player'));
@@ -59,62 +62,56 @@
 	onkeydown={(e) => {
 		const player = game.get('player');
 		let turnTaken = false;
-		if ((e.key === 'ArrowLeft' || e.key === 'a') && player) {
-			const attackTarget = game.at({ x: player.x - 1, y: player.y }).find((e) => e.hp);
-			if (attackTarget) {
-				turnTaken = actions.attack({
-					game,
-					actor: player,
-					target: attackTarget,
-				});
-			} else {
-				turnTaken = actions.move({ game, actor: player, dx: -1, dy: 0 });
+
+		if (spelling == null && !activeAbility && !gameOver) {
+			if ((e.key === 'ArrowLeft' || e.key === 'a') && player) {
+				const attackTarget = game.at({ x: player.x - 1, y: player.y }).find((e) => e.hp);
+				if (attackTarget) {
+					turnTaken = actions.attack({
+						game,
+						actor: player,
+						target: attackTarget,
+					});
+				} else {
+					turnTaken = actions.move({ game, actor: player, dx: -1, dy: 0 });
+				}
 			}
-		}
-		if ((e.key === 'ArrowRight' || e.key === 'd') && player) {
-			const attackTarget = game.at({ x: player.x + 1, y: player.y }).find((e) => e.hp);
-			if (attackTarget) {
-				turnTaken = actions.attack({
-					game,
-					actor: player,
-					target: attackTarget,
-				});
-			} else {
-				turnTaken = actions.move({ game, actor: player, dx: 1, dy: 0 });
+			if ((e.key === 'ArrowRight' || e.key === 'd') && player) {
+				const attackTarget = game.at({ x: player.x + 1, y: player.y }).find((e) => e.hp);
+				if (attackTarget) {
+					turnTaken = actions.attack({
+						game,
+						actor: player,
+						target: attackTarget,
+					});
+				} else {
+					turnTaken = actions.move({ game, actor: player, dx: 1, dy: 0 });
+				}
 			}
-		}
-		if ((e.key === 'ArrowUp' || e.key === 'w') && player) {
-			const attackTarget = game.at({ x: player.x, y: player.y - 1 }).find((e) => e.hp);
-			if (attackTarget) {
-				turnTaken = actions.attack({
-					game,
-					actor: player,
-					target: attackTarget,
-				});
-			} else {
-				turnTaken = actions.move({ game, actor: player, dx: 0, dy: -1 });
+			if ((e.key === 'ArrowUp' || e.key === 'w') && player) {
+				const attackTarget = game.at({ x: player.x, y: player.y - 1 }).find((e) => e.hp);
+				if (attackTarget) {
+					turnTaken = actions.attack({
+						game,
+						actor: player,
+						target: attackTarget,
+					});
+				} else {
+					turnTaken = actions.move({ game, actor: player, dx: 0, dy: -1 });
+				}
 			}
-		}
-		if ((e.key === 'ArrowDown' || e.key === 's') && player) {
-			const attackTarget = game.at({ x: player.x, y: player.y + 1 }).find((e) => e.hp);
-			if (attackTarget) {
-				turnTaken = actions.attack({
-					game,
-					actor: player,
-					target: attackTarget,
-				});
-			} else {
-				turnTaken = actions.move({ game, actor: player, dx: 0, dy: 1 });
+			if ((e.key === 'ArrowDown' || e.key === 's') && player) {
+				const attackTarget = game.at({ x: player.x, y: player.y + 1 }).find((e) => e.hp);
+				if (attackTarget) {
+					turnTaken = actions.attack({
+						game,
+						actor: player,
+						target: attackTarget,
+					});
+				} else {
+					turnTaken = actions.move({ game, actor: player, dx: 0, dy: 1 });
+				}
 			}
-		}
-		if (e.key === 'e') {
-			activeAbility = abilities.laser;
-		}
-		if (e.key === 'f') {
-			activeAbility = abilities.shoot;
-		}
-		if (e.key === 'r') {
-			activeAbility = abilities.blast;
 		}
 
 		if (turnTaken) {
@@ -135,6 +132,15 @@
 		{:else}
 			Defeat! You are dead
 		{/if}
+		<button
+			class="btn preset-filled-primary-500 w-full"
+			onclick={() => {
+				playSound('uiClick');
+				initGame();
+			}}
+		>
+			New Game
+		</button>
 	{/snippet}
 </Modal>
 
@@ -168,6 +174,13 @@
 							if (activeAbility && player) {
 								activeAbility.execute(player, { x, y }, game);
 								game.processTurn();
+								for (const letter of (spelling ?? '').toLowerCase().split('')) {
+									if (player?.inventory) {
+										player.inventory[letter as Letter] =
+											(player.inventory[letter as Letter] ?? 1) - 1;
+									}
+								}
+								spelling = null;
 								activeAbility = null;
 							}
 						}}
@@ -183,24 +196,20 @@
 		{/each}
 		{#each game.with('glyph') as entity (entity.id)}
 			<span
-				class="pointer-events-none absolute inline-block text-center transition-all"
+				class="pointer-events-none absolute inline-block text-center transition-all {entity.glyph
+					.class ?? ''}"
 				style:top="{(((bumps.get(entity.id)?.y ?? entity.y) + entity.y) / 2 / MAP_HEIGHT) * 100}%"
 				style:left="{(((bumps.get(entity.id)?.x ?? entity.x) + entity.x) / 2 / MAP_WIDTH) * 100}%"
-				style:color={entity.glyph?.color}
 				style:width="{100 / MAP_WIDTH}vmin"
 				style:height="{100 / MAP_HEIGHT}vmin"
 				style:font-size="{100 / MAP_WIDTH / 1.5}vmin"
-				style:font-family="Kablammo"
-				style:font-variation-settings="'MORF' 0"
-				style:font-style="oblique 1deg"
-				style:animation="morph 10s linear infinite"
 				out:blur
 			>
 				{entity.glyph?.char}
 				{#if entity.hp}
 					<span
-						class="bg-error-300-700 absolute bottom-0 left-0 h-1"
-						style:width="{(entity.hp.current / entity.hp.max) * 100}%"
+						class="bg-error-300-700 absolute bottom-0 left-[20%] h-1"
+						style:width="{(entity.hp.current / entity.hp.max) * 60}%"
 					></span>
 				{/if}
 			</span>
@@ -219,9 +228,10 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="p-4">
+	<div class="w-0 max-w-112 shrink grow p-4">
 		{#if player?.hp?.current}
 			HP: {player?.hp?.current}/{player?.hp?.max}
+			<Inventory bind:spelling bind:activeAbility />
 		{:else}
 			DEAD
 		{/if}

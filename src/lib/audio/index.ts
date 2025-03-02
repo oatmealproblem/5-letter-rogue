@@ -1,5 +1,8 @@
 import { Howl } from 'howler';
 
+import uiBack from './back_001.webm';
+import uiClick from './click_001.webm';
+import uiError from './error_005.webm';
 import explosion from './explosionCrunch_000.webm';
 import footstep from './footstep_grass_000.webm';
 import knifeSlice from './knifeSlice.webm';
@@ -10,6 +13,9 @@ const soundUrls = {
 	footstep,
 	knifeSlice,
 	laser,
+	uiBack,
+	uiClick,
+	uiError,
 };
 
 export type SoundId = keyof typeof soundUrls;

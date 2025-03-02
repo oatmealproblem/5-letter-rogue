@@ -18,6 +18,12 @@ export function move({
 		actor.x += dx;
 		actor.y += dy;
 		game.playSfx('footstep');
+
+		const letter = game.at(destination).find((e) => e.letter);
+		if (letter?.letter && actor.inventory) {
+			game.remove(letter);
+			actor.inventory[letter.letter] = (actor.inventory[letter.letter] ?? 0) + 1;
+		}
 		return true;
 	}
 	return false;

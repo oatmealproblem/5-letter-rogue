@@ -3,6 +3,7 @@ import { getRay } from '$lib/geo';
 import type { Ability } from '$lib/types';
 
 export const laser: Ability = {
+	name: 'laser',
 	target: 'tile',
 	highlight(actor, targetPos, game) {
 		const guide = getRay(actor, targetPos);

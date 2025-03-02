@@ -1,11 +1,26 @@
+import { RNG } from 'rot-js';
+
 import type { Game } from '$lib/game.svelte';
-import type { Entity } from '$lib/types';
+import { isOutOfBounds } from '$lib/geo';
+import { createFromTemplate } from '$lib/templates';
+import type { Entity, Letter } from '$lib/types';
 
 export function damage({ game, target, amount }: { game: Game; target: Entity; amount: number }) {
 	if (target.hp) {
 		target.hp.current -= amount;
 		if (target.hp.current <= 0) {
 			game.remove(target);
+			if (target.name) {
+				const letters = RNG.shuffle(target.name.toLowerCase().split(''));
+				for (const letter of letters.slice(0, 3)) {
+					const dx = RNG.getUniformInt(-1, 1);
+					const dy = RNG.getUniformInt(-1, 1);
+					const pos = { x: target.x + dx, y: target.y + dy };
+					if (!isOutOfBounds(pos) && !game.at(pos).some((e) => e.player || e.letter)) {
+						game.add(createFromTemplate(letter as Letter, pos));
+					}
+				}
+			}
 		}
 		return true;
 	}
