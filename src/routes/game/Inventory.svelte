@@ -66,23 +66,19 @@
 				cast();
 			}
 
-			// backspace
-			if (e.key === 'Backspace') {
-				playSound('uiClick');
-				spelling = spelling?.slice(0, spelling.length - 1) ?? '';
-			}
-
-			// typing
-			if (
-				!input?.isSameNode(document.activeElement) &&
-				LETTERS.includes(e.key.toLowerCase() as Letter)
-			) {
-				const upper = e.key.toUpperCase();
-				if (validateLetters(spelling + upper)) {
+			// typing controls when input isn't focused
+			if (!input?.isSameNode(document.activeElement)) {
+				if (e.key === 'Backspace') {
 					playSound('uiClick');
-					spelling += upper;
-				} else {
-					playSound('uiError');
+					spelling = spelling?.slice(0, spelling.length - 1) ?? '';
+				} else if (LETTERS.includes(e.key.toLowerCase() as Letter)) {
+					const upper = e.key.toUpperCase();
+					if (validateLetters(spelling + upper)) {
+						playSound('uiClick');
+						spelling += upper;
+					} else {
+						playSound('uiError');
+					}
 				}
 			}
 		} else if (activeAbility) {
@@ -100,10 +96,10 @@
 	}}
 />
 
-<section>
+<section class="mt-4">
 	<div class="flex gap-2">
 		{#if activeAbility}
-			Casting: {activeAbility.name}
+			Casting: {activeAbility.name} - {activeAbility.description}
 		{:else if spelling != null}
 			<!-- svelte-ignore a11y_autofocus -->
 			<input
@@ -167,7 +163,7 @@
 			>
 				{upper}
 				{#if amount}
-					<span class="badge-icon preset-filled-secondary-200-800 absolute -top-2 -right-2 z-10">
+					<span class="badge-icon preset-filled-secondary-200-800 absolute -top-2 -right-2">
 						{amount}
 					</span>
 				{/if}

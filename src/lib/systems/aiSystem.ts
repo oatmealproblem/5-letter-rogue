@@ -14,6 +14,7 @@ import type { Pos } from '$lib/types';
 
 export function aiSystem(game: Game) {
 	for (const actor of game.with('ai')) {
+		if (!game.get(actor.id)) continue; // killed by previous actions
 		if (actor.team && actor.attack) {
 			const target = game
 				.with('team', 'hp')

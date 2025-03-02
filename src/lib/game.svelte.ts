@@ -3,7 +3,9 @@ import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import type { SetRequired } from 'type-fest';
 
 import { playSound, type SoundId } from './audio';
+import { LETTERS } from './constants';
 import { aiSystem } from './systems/aiSystem';
+import { statusSystem } from './systems/statusSystem';
 import { createFromTemplate } from './templates';
 import type { Entity, Pos } from './types';
 
@@ -146,6 +148,7 @@ export class Game {
 
 	processTurn() {
 		aiSystem(this);
+		statusSystem(this);
 		this.save();
 	}
 
@@ -184,19 +187,20 @@ export function initGame() {
 		id: 'player',
 		x: 7,
 		y: 7,
-		player: true,
-		team: 'player',
-		attack: { damage: 2 },
+		attack: { damage: 1 },
 		glyph: { char: '@', class: 'font-creature text-white z-50' },
 		hp: { current: 10, max: 10 },
-		inventory: { a: 1, b: 2, l: 1, s: 1, t: 1 },
+		inventory: Object.fromEntries(LETTERS.map((l) => [l, 1])),
+		player: true,
+		statuses: {},
+		team: 'player',
 	};
 	game.add(player);
 
 	const snake = createFromTemplate('snake', { x: 2, y: 3 });
 	game.add(snake);
 
-	const snake2 = createFromTemplate('snake', { x: 12, y: 10 });
+	const snake2 = createFromTemplate('snake', { x: 12, y: 10, team: 'player' });
 	game.add(snake2);
 
 	game.save();

@@ -12,16 +12,20 @@
 	import { rangeFromTo } from '$lib/math';
 	import { type Ability, type Entity, type Letter, type Pos } from '$lib/types';
 
+	import Creatures from './Creatures.svelte';
 	import Inventory from './Inventory.svelte';
+	import StatusBadges from './StatusBadges.svelte';
+	import { getHighlightClass } from './utils';
 
 	let spelling = $state<string | null>(null);
 	let activeAbility = $state.raw<null | Ability>(null);
 	let mousePos = $state.raw<null | Pos>(null);
 	let player = $derived(game.get('player'));
+	let hovered = $state<null | Entity>(null);
 	let highlighted = $derived(
 		player && mousePos && activeAbility
 			? activeAbility.highlight(player, mousePos, game)
-			: { guide: [], hit: [] },
+			: { guide: mousePos ? [mousePos] : [], harm: [], help: [] },
 	);
 
 	let defeat = $derived(!player);
@@ -169,11 +173,10 @@
 				{#each rangeFromTo(0, MAP_WIDTH) as x}
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<span
-						class="text-surface-300-700 inline-block text-center select-none"
-						class:bg-primary-200-800={highlighted?.guide.some(
-							(pos) => pos.x === x && pos.y === y,
-						) && !highlighted?.hit.some((pos) => pos.x === x && pos.y === y)}
-						class:bg-error-200-800={highlighted?.hit.some((pos) => pos.x === x && pos.y === y)}
+						class="{getHighlightClass(
+							{ x, y },
+							highlighted,
+						)} text-surface-300-700 inline-block text-center select-none"
 						style:width="{100 / MAP_WIDTH}vmin"
 						style:height="{100 / MAP_HEIGHT}vmin"
 						style:font-size="{100 / MAP_WIDTH / 1.5}vmin"
@@ -208,6 +211,7 @@
 			<span
 				class="pointer-events-none absolute inline-block text-center transition-all {entity.glyph
 					.class ?? ''}"
+				class:scale-150={hovered === entity}
 				style:top="{(((bumps.get(entity.id)?.y ?? entity.y) + entity.y) / 2 / MAP_HEIGHT) * 100}%"
 				style:left="{(((bumps.get(entity.id)?.x ?? entity.x) + entity.x) / 2 / MAP_WIDTH) * 100}%"
 				style:width="{100 / MAP_WIDTH}vmin"
@@ -240,8 +244,14 @@
 	</div>
 	<div class="w-0 max-w-112 shrink grow p-4">
 		{#if player?.hp?.current}
-			HP: {player?.hp?.current}/{player?.hp?.max}
+			<section>
+				<span class="text-success-700-300">HP: {player.hp.current}/{player.hp.max}</span>
+				<div>
+					<StatusBadges entity={player} />
+				</div>
+			</section>
 			<Inventory bind:spelling bind:activeAbility />
+			<Creatures {highlighted} bind:hovered />
 		{:else}
 			DEAD
 		{/if}

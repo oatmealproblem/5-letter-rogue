@@ -23,7 +23,7 @@ export type SoundId = keyof typeof soundUrls;
 const sounds = Object.fromEntries(
 	Object.entries(soundUrls)
 		.map<[string, Howl]>(([key, val]) => [key, new Howl({ src: val })])
-		.map<[string, () => void]>(([key, val]) => [key, throttle(() => val.play(), 100)]),
+		.map<[string, () => void]>(([key, val]) => [key, throttle(() => val.play(), 50)]),
 );
 
 export function playSound(sound: SoundId) {

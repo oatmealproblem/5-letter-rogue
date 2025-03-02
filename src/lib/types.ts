@@ -7,8 +7,13 @@ export interface Pos {
 
 export interface Ability {
 	name: string;
+	description: string;
 	target: 'self' | 'tile' | 'enemy' | 'ally' | 'creature' | 'direction';
-	highlight: (actor: Entity, targetPos: Pos, game: Game) => { guide: Pos[]; hit: Pos[] };
+	highlight: (
+		actor: Entity,
+		targetPos: Pos,
+		game: Game,
+	) => { guide: Pos[]; harm: Pos[]; help: Pos[] };
 	execute: (actor: Entity, targetPos: Pos, game: Game) => void;
 }
 
@@ -16,6 +21,7 @@ export type Letter = keyof Inventory;
 
 export interface Attack {
 	damage: number;
+	inflicts?: Partial<Record<Status, number>>;
 }
 
 export interface Glyph {
@@ -57,12 +63,18 @@ export interface Inventory {
 	z?: number;
 }
 
+export interface Statuses {
+	poisoned?: true | number;
+}
+export type Status = keyof Statuses;
+
 export interface Entity {
 	id: string;
 	x: number;
 	y: number;
 	ai?: true;
 	attack?: Attack;
+	description?: string;
 	glyph?: Glyph;
 	hp?: HP;
 	inventory?: Inventory;
@@ -70,4 +82,5 @@ export interface Entity {
 	name?: string;
 	player?: true;
 	team?: string;
+	statuses?: Statuses;
 }
