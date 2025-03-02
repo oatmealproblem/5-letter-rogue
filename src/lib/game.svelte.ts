@@ -6,6 +6,7 @@ import { playSound, type SoundId } from './audio';
 import { LETTERS } from './constants';
 import { aiSystem } from './systems/aiSystem';
 import { statusSystem } from './systems/statusSystem';
+import { turnEndSystem } from './systems/turnEndSystem';
 import { createFromTemplate } from './templates';
 import type { Entity, Pos } from './types';
 
@@ -149,6 +150,7 @@ export class Game {
 	processTurn() {
 		aiSystem(this);
 		statusSystem(this);
+		turnEndSystem(this);
 		this.save();
 	}
 
@@ -185,6 +187,8 @@ export function initGame() {
 
 	const player: Entity = {
 		id: 'player',
+		name: 'player',
+		description: 'This is you.',
 		x: 7,
 		y: 7,
 		attack: { damage: 1 },
@@ -202,6 +206,10 @@ export function initGame() {
 
 	const snake2 = createFromTemplate('snake', { x: 12, y: 10, team: 'player' });
 	game.add(snake2);
+
+	game.add(createFromTemplate('water', { x: 5, y: 5 }));
+	game.add(createFromTemplate('abyss', { x: 4, y: 5 }));
+	game.add(createFromTemplate('flame', { x: 3, y: 5 }));
 
 	game.save();
 }

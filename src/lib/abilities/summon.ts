@@ -9,19 +9,17 @@ export function createSummonAbility(templateId: TemplateId): Ability {
 		synonyms: template.synonyms,
 		description: `Summons friendly ${template.name}. ${template.description}`,
 		attributes: {},
-		highlight(actor, targetPos, game) {
-			if (game.at(targetPos).some((e) => e.hp)) {
-				return { guide: [targetPos], harm: [], help: [] };
+		highlight(actor, target, game) {
+			if (game.at(target).some((e) => e.hp)) {
+				return { guide: [target], harm: [], help: [] };
 			} else {
-				return { guide: [], harm: [], help: [targetPos] };
+				return { guide: [], harm: [], help: [target] };
 			}
 		},
-		execute(actor, targetPos, game) {
-			const highlights = this.highlight(actor, targetPos, game);
+		execute(actor, target, game) {
+			const highlights = this.highlight(actor, target, game);
 			if (highlights.help.length) {
-				game.add(
-					createFromTemplate(templateId, { x: targetPos.x, y: targetPos.y, team: actor.team }),
-				);
+				game.add(createFromTemplate(templateId, { x: target.x, y: target.y, team: actor?.team }));
 				game.playSfx('magic');
 				return true;
 			} else {

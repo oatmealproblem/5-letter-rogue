@@ -13,3 +13,16 @@ export function getHighlightClass(pos: Pos, highlights: ReturnType<Ability['high
 		return '';
 	}
 }
+
+export function getHighlightBorderClass(pos: Pos, highlights: ReturnType<Ability['highlight']>) {
+	const filterFn = isSamePos(pos);
+	if (highlights.harm.some(filterFn)) {
+		return 'inset-ring-4 inset-ring-error-200-800';
+	} else if (highlights.help.some(filterFn)) {
+		return 'inset-ring-4 inset-ring-success-200-800';
+	} else if (highlights.guide.some(filterFn)) {
+		return 'inset-ring-4 inset-ring-primary-200-800';
+	} else {
+		return '';
+	}
+}

@@ -1,4 +1,4 @@
-import type { Entity } from '$lib/types';
+import type { Template } from '$lib/types';
 
 export const enemies = {
 	snake: {
@@ -12,4 +12,4 @@ export const enemies = {
 		statuses: {},
 		team: 'enemy',
 	},
-} satisfies Record<string, Omit<Entity, 'x' | 'y' | 'id'>>;
+} satisfies Record<string, Template>;

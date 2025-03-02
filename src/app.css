@@ -31,6 +31,13 @@
 	animation: morph 10s linear infinite;
 }
 
+.font-terrain {
+	font-family: 'Kablammo';
+	font-variation-settings: 'MORF' 0;
+	font-style: oblique 1deg;
+	animation: morph 60s linear infinite;
+}
+
 .font-letter {
 	scale: 0.75;
 	font-weight: bold;

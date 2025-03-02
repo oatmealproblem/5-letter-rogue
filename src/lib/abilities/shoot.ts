@@ -7,16 +7,17 @@ export const shoot: Ability = {
 	synonyms: ['snipe'],
 	description: 'Does 5 physical damage to one enemy.',
 	attributes: { physicalDamage: 5 },
-	highlight(actor, targetPos, game) {
-		const line = getLine(actor, targetPos);
+	highlight(actor, target, game) {
+		if (!actor) return { guide: [], harm: [], help: [] };
+		const line = getLine(actor, target);
 		const hitIndex = line.slice(1).findIndex((pos) => game.at(pos).some((e) => e.hp)) + 1;
-		const target = hitIndex ? [line[hitIndex]] : [];
+		const harm = hitIndex ? [line[hitIndex]] : [];
 		const guide = hitIndex ? line.slice(0, hitIndex) : line;
-		return { guide, harm: target, help: [] };
+		return { guide, harm, help: [] };
 	},
-	execute(actor, targetPos, game) {
+	execute(actor, target, game) {
 		game.playSfx('laser');
-		for (const pos of this.highlight(actor, targetPos, game).harm) {
+		for (const pos of this.highlight(actor, target, game).harm) {
 			for (const entity of game.at(pos)) {
 				actions.damage({ game, target: entity, amount: this.attributes.physicalDamage ?? 0 });
 			}

@@ -5,7 +5,7 @@
 <svelte:head><title>Spell Book</title></svelte:head>
 
 {#each Object.values(abilities)
-	.filter((a) => !a.synonymOf && !a.summon)
+	.filter((a) => !a.synonymOf && !a.summon && a.name.length === 5)
 	.toSorted((a, b) => a.name.localeCompare(b.name)) as ability (ability.name)}
 	<section class="card bg-surface-200-800 p-4">
 		<header>

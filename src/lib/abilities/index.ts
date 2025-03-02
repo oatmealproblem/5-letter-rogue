@@ -2,11 +2,15 @@ import { type TemplateId, templates } from '$lib/templates';
 import type { Ability } from '$lib/types';
 
 import { blast } from './blast';
+import { exile } from './exile';
+import * as nonPlayerAbilities from './nonPlayer';
 import { shoot } from './shoot';
 import { createSummonAbility } from './summon';
 
 const abilities: Record<string, Ability> = {
+	...nonPlayerAbilities,
 	blast,
+	exile,
 	shoot,
 };
 

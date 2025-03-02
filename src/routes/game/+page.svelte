@@ -16,7 +16,7 @@
 	import Creatures from './Creatures.svelte';
 	import Inventory from './Inventory.svelte';
 	import StatusBadges from './StatusBadges.svelte';
-	import { getHighlightClass } from './utils';
+	import { getHighlightBorderClass, getHighlightClass } from './utils';
 
 	let spelling = $state<string | null>(null);
 	let activeAbility = $state.raw<null | Ability>(null);
@@ -127,6 +127,9 @@
 					turnTaken = actions.move({ game, actor: player, dx: 0, dy: 1 });
 				}
 			}
+			if (e.key === ' ') {
+				turnTaken = true;
+			}
 		}
 
 		if (turnTaken) {
@@ -213,7 +216,7 @@
 		{#each game.with('glyph') as entity (entity.id)}
 			<span
 				class="pointer-events-none absolute inline-block text-center transition-all {entity.glyph
-					.class ?? ''}"
+					.class ?? ''} {getHighlightBorderClass(entity, highlighted)}"
 				class:scale-150={hovered === entity}
 				style:top="{(((bumps.get(entity.id)?.y ?? entity.y) + entity.y) / 2 / MAP_HEIGHT) * 100}%"
 				style:left="{(((bumps.get(entity.id)?.x ?? entity.x) + entity.x) / 2 / MAP_WIDTH) * 100}%"
@@ -258,7 +261,7 @@
 				</div>
 			</section>
 			<Inventory bind:spelling bind:activeAbility />
-			<Creatures {highlighted} bind:hovered />
+			<Creatures {highlighted} bind:hovered {mousePos} />
 		{:else}
 			DEAD
 		{/if}

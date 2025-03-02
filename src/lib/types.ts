@@ -17,11 +17,11 @@ export interface Ability {
 		magicDamage?: number;
 	};
 	highlight: (
-		actor: Entity,
-		targetPos: Pos,
+		actor: Entity | null,
+		target: Pos | Entity,
 		game: Game,
 	) => { guide: Pos[]; harm: Pos[]; help: Pos[] };
-	execute: (actor: Entity, targetPos: Pos, game: Game) => boolean;
+	execute: (actor: Entity | null, targetPos: Pos | Entity, game: Game) => boolean;
 }
 
 export type Letter = keyof Inventory;
@@ -72,6 +72,7 @@ export interface Inventory {
 
 export interface Statuses {
 	poisoned?: true | number;
+	immobilized?: true | number;
 }
 export type Status = keyof Statuses;
 
@@ -80,15 +81,20 @@ export interface Entity {
 	x: number;
 	y: number;
 	ai?: true;
+	aiCost?: number;
 	attack?: Attack;
 	description?: string;
 	glyph?: Glyph;
 	hp?: HP;
 	inventory?: Inventory;
 	letter?: Letter;
+	onEnter?: string;
+	onTurnEnd?: string;
 	name?: string;
 	player?: true;
 	team?: string;
 	statuses?: Statuses;
 	synonyms?: string[];
 }
+
+export type Template = Omit<Entity, 'id' | 'x' | 'y'>;

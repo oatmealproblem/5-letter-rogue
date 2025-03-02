@@ -6,6 +6,10 @@ export interface StatusMetadata {
 }
 
 export const statusMetadata: Record<Status, StatusMetadata> = {
+	immobilized: {
+		classification: 'negative',
+		description: 'Prevents movement',
+	},
 	poisoned: {
 		classification: 'negative',
 		description: 'Prevents all healing',

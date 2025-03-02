@@ -2,7 +2,7 @@
 	import { Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	import { game } from '$lib/game.svelte';
-	import type { Ability, Entity } from '$lib/types';
+	import type { Ability, Entity, Pos } from '$lib/types';
 
 	import StatusBadges from './StatusBadges.svelte';
 	import { getHighlightClass } from './utils';
@@ -10,11 +10,14 @@
 	interface Props {
 		highlighted: ReturnType<Ability['highlight']>;
 		hovered: Entity | null;
+		mousePos: Pos | null;
 	}
 
-	let { highlighted, hovered = $bindable() }: Props = $props();
+	let { highlighted, hovered = $bindable(), mousePos }: Props = $props();
 
 	let creatures = $derived(game.with('ai'));
+
+	let nonCreatures = $derived(mousePos ? game.at(mousePos).filter((e) => !e.ai) : []);
 
 	function getHpClass(entity: Entity) {
 		if (entity.team === 'player') {
@@ -65,6 +68,18 @@
 					{#snippet content()}{creature.description}{/snippet}
 				</Tooltip>
 				<StatusBadges entity={creature} />
+			</li>
+		{/each}
+		{#each nonCreatures as entity (entity.id)}
+			<li class="text-lg">
+				<span class="{entity.glyph?.class} border-surface-50-950 rounded-sm border-2 px-1 text-2xl">
+					{entity.glyph?.char}
+				</span>
+				<span class="capitalize">
+					{entity.name}
+				</span>
+				-
+				<span>{entity.description}</span>
 			</li>
 		{/each}
 	</ul>

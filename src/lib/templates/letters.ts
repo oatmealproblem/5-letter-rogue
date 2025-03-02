@@ -1,8 +1,8 @@
 import { LETTERS } from '$lib/constants';
-import type { Entity } from '$lib/types';
+import type { Letter, Template } from '$lib/types';
 
 export const letters = Object.fromEntries(
-	LETTERS.map<[string, Omit<Entity, 'id' | 'x' | 'y'>]>((letter) => [
+	LETTERS.map<[string, Template]>((letter) => [
 		letter,
 		{
 			letter,
@@ -13,4 +13,4 @@ export const letters = Object.fromEntries(
 			},
 		},
 	]),
-) as Record<(typeof LETTERS)[number], Omit<Entity, 'id' | 'x' | 'y'>>;
+) as Record<Letter, Template>;

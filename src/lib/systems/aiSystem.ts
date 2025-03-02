@@ -33,7 +33,7 @@ export function aiSystem(game: Game) {
 							if (game.at(pos).some((e) => e.hp)) {
 								return Infinity;
 							} else {
-								return 1;
+								return game.at(pos).reduce((cost, entity) => cost + (entity.aiCost ?? 0), 1);
 							}
 						},
 						includeStart: false,
