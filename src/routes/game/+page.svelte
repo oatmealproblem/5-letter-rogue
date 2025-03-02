@@ -263,7 +263,7 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="bg-surface-100-900 w-0 max-w-112 shrink grow p-4">
+	<div class="bg-surface-100-900 flex h-screen w-0 max-w-112 shrink grow flex-col p-4">
 		{#if player?.hp?.current}
 			<section class="flex">
 				<h1 class="h6 grow">Floor {level?.current}/{level?.max}</h1>

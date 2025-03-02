@@ -30,7 +30,7 @@
 	}
 </script>
 
-<section class="mt-6">
+<section class="mt-6 shrink overflow-auto">
 	<ul onmouseleave={() => (hovered = null)}>
 		{#each creatures as creature (creature.id)}
 			<li
