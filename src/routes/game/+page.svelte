@@ -10,7 +10,7 @@
 	import { game, initGame } from '$lib/game.svelte';
 	import { posToString } from '$lib/geo';
 	import { rangeFromTo } from '$lib/math';
-	import { type Ability, type Letter, type Pos } from '$lib/types';
+	import { type Ability, type Entity, type Letter, type Pos } from '$lib/types';
 
 	import Inventory from './Inventory.svelte';
 
@@ -55,6 +55,16 @@
 				font-size: ${100 / MAP_WIDTH / 1.5}vmin;
 			`,
 		};
+	}
+
+	function getHealthBarClass(entity: Entity) {
+		if (entity.team === 'player') {
+			return 'bg-success-300-700';
+		} else if (entity.team === 'enemy') {
+			return 'bg-error-300-700';
+		} else {
+			return 'bg-warning-300-700';
+		}
 	}
 </script>
 
@@ -208,7 +218,7 @@
 				{entity.glyph?.char}
 				{#if entity.hp}
 					<span
-						class="bg-error-300-700 absolute bottom-0 left-[20%] h-1"
+						class="{getHealthBarClass(entity)} absolute bottom-0 left-[20%] h-1"
 						style:width="{(entity.hp.current / entity.hp.max) * 60}%"
 					></span>
 				{/if}
