@@ -186,16 +186,18 @@
 						}}
 						onclick={() => {
 							if (activeAbility && player) {
-								activeAbility.execute(player, { x, y }, game);
-								game.processTurn();
-								for (const letter of (spelling ?? '').toLowerCase().split('')) {
-									if (player?.inventory) {
-										player.inventory[letter as Letter] =
-											(player.inventory[letter as Letter] ?? 1) - 1;
+								const success = activeAbility.execute(player, { x, y }, game);
+								if (success) {
+									game.processTurn();
+									for (const letter of (spelling ?? '').toLowerCase().split('')) {
+										if (player?.inventory) {
+											player.inventory[letter as Letter] =
+												(player.inventory[letter as Letter] ?? 1) - 1;
+										}
 									}
+									spelling = null;
+									activeAbility = null;
 								}
-								spelling = null;
-								activeAbility = null;
 							}
 						}}
 						oncontextmenu={(e) => {
