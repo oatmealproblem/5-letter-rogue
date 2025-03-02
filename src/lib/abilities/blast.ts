@@ -4,10 +4,11 @@ import type { Ability } from '$lib/types';
 
 export const blast: Ability = {
 	name: 'blast',
-	description: 'Does 3 physical damage in a 1 tile burst.',
-	target: 'tile',
+	synonyms: ['burst'],
+	description: 'Does 3 physical damage in a 1 tile radius.',
+	attributes: { physicalDamage: 3, radius: 1 },
 	highlight(actor, targetPos, game) {
-		const guide = getPosInRange(targetPos, 1, 'chebyshev');
+		const guide = getPosInRange(targetPos, this.attributes.radius ?? 0, 'chebyshev');
 		const target = guide.filter((p) => game.at(p).some((e) => e.hp));
 		return { guide, harm: target, help: [] };
 	},
@@ -15,8 +16,9 @@ export const blast: Ability = {
 		game.playSfx('explosion');
 		for (const pos of this.highlight(actor, targetPos, game).harm) {
 			for (const entity of game.at(pos)) {
-				actions.damage({ game, target: entity, amount: 3 });
+				actions.damage({ game, target: entity, amount: this.attributes.physicalDamage ?? 0 });
 			}
 		}
+		return true;
 	},
 };

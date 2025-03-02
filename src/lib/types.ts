@@ -7,14 +7,21 @@ export interface Pos {
 
 export interface Ability {
 	name: string;
+	synonyms?: string[];
+	synonymOf?: string;
 	description: string;
-	target: 'self' | 'tile' | 'enemy' | 'ally' | 'creature' | 'direction';
+	summon?: boolean;
+	attributes: {
+		radius?: number;
+		physicalDamage?: number;
+		magicDamage?: number;
+	};
 	highlight: (
 		actor: Entity,
 		targetPos: Pos,
 		game: Game,
 	) => { guide: Pos[]; harm: Pos[]; help: Pos[] };
-	execute: (actor: Entity, targetPos: Pos, game: Game) => void;
+	execute: (actor: Entity, targetPos: Pos, game: Game) => boolean;
 }
 
 export type Letter = keyof Inventory;
@@ -83,4 +90,5 @@ export interface Entity {
 	player?: true;
 	team?: string;
 	statuses?: Statuses;
+	synonyms?: string[];
 }

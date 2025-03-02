@@ -99,7 +99,8 @@
 <section class="mt-4">
 	<div class="flex gap-2">
 		{#if activeAbility}
-			Casting: {activeAbility.name} - {activeAbility.description}
+			Casting: {activeAbility.name}{activeAbility.synonymOf ? ` (${activeAbility.synonymOf})` : ''} -
+			{activeAbility.description}
 		{:else if spelling != null}
 			<!-- svelte-ignore a11y_autofocus -->
 			<input

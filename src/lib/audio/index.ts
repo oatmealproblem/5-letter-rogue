@@ -5,6 +5,7 @@ import uiClick from './click_001.webm';
 import uiError from './error_005.webm';
 import explosion from './explosionCrunch_000.webm';
 import footstep from './footstep_grass_000.webm';
+import magic from './forceField_004.webm';
 import knifeSlice from './knifeSlice.webm';
 import laser from './laserSmall_000.webm';
 
@@ -12,6 +13,7 @@ const soundUrls = {
 	explosion,
 	footstep,
 	knifeSlice,
+	magic,
 	laser,
 	uiBack,
 	uiClick,
