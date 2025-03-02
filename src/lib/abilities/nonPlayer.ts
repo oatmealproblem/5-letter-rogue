@@ -31,7 +31,11 @@ export const abyssOnEnter: Ability = {
 		if (isEntity(target) && target.hp) {
 			damage({ game, target, amount: Math.floor(target.hp?.current / 2) });
 		}
-		exile.execute(actor, target, game);
+		if (isEntity(target) && target.player) {
+			game.nextLevel({ collectLetters: false });
+		} else {
+			exile.execute(actor, target, game);
+		}
 		return true;
 	},
 };

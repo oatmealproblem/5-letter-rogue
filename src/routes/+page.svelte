@@ -1,6 +1,6 @@
 <script>
 	import { playSound } from '../lib/audio';
-	import { initGame } from '../lib/game.svelte';
+	import { game } from '../lib/game.svelte';
 </script>
 
 <h1 class="h1 mt-8 text-center">5 Letter Rogue</h1>
@@ -17,10 +17,10 @@
 		href="#/game"
 		onclick={() => {
 			playSound('uiClick');
-			initGame();
+			game.new();
 		}}
 	>
 		New Game
 	</a>
-	<a class="btn btn-lg preset-filled-secondary-700-300" href="#/settings">Settings</a>
+	<a class="btn btn-lg preset-filled-secondary-700-300" href="#/help">How to Play</a>
 </div>

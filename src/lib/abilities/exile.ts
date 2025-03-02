@@ -19,7 +19,10 @@ export const exile: Ability = {
 				for (const entity of game.at(pos)) {
 					if (entity.ai) {
 						game.remove(entity);
-						// TODO send to next level
+						const level = game.get('level');
+						if (level?.level) {
+							level.level.exiles.push(entity);
+						}
 					}
 				}
 			}

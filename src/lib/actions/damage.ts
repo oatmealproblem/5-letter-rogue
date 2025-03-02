@@ -10,7 +10,7 @@ export function damage({ game, target, amount }: { game: Game; target: Entity; a
 		target.hp.current -= amount;
 		if (target.hp.current <= 0) {
 			game.remove(target);
-			if (target.name) {
+			if (target.name && target.team !== 'player') {
 				const letters = RNG.shuffle(target.name.toLowerCase().split(''));
 				for (const letter of letters.slice(0, 3)) {
 					const dx = RNG.getUniformInt(-1, 1);

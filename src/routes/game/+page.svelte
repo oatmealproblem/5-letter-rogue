@@ -8,7 +8,7 @@
 	import { playSound } from '$lib/audio';
 	import HelpMenu from '$lib/components/HelpMenu.svelte';
 	import { MAP_HEIGHT, MAP_WIDTH } from '$lib/constants';
-	import { game, initGame } from '$lib/game.svelte';
+	import { game } from '$lib/game.svelte';
 	import { posToString } from '$lib/geo';
 	import { rangeFromTo } from '$lib/math';
 	import { type Ability, type Entity, type Letter, type Pos } from '$lib/types';
@@ -22,6 +22,7 @@
 	let activeAbility = $state.raw<null | Ability>(null);
 	let mousePos = $state.raw<null | Pos>(null);
 	let player = $derived(game.get('player'));
+	let level = $derived(game.get('level')?.level);
 	let hovered = $state<null | Entity>(null);
 	let highlighted = $derived(
 		player && mousePos && activeAbility
@@ -145,20 +146,34 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		{#if victory}
-			Victory! All enemies defeated or befriended
+		{#if victory && level?.current === level?.max}
+			Victory! You have survived the dungeon!
+		{:else if victory}
+			Floor cleared! All enemies defeated or befriended
 		{:else}
 			Defeat! You are dead
 		{/if}
-		<button
-			class="btn preset-filled-primary-500 w-full"
-			onclick={() => {
-				playSound('uiClick');
-				initGame();
-			}}
-		>
-			New Game
-		</button>
+		{#if victory && level?.current !== level?.max}
+			<button
+				class="btn preset-filled-primary-500 w-full"
+				onclick={() => {
+					playSound('uiClick');
+					game.nextLevel();
+				}}
+			>
+				Collect Letters and Descend
+			</button>
+		{:else}
+			<button
+				class="btn preset-filled-primary-500 w-full"
+				onclick={() => {
+					playSound('uiClick');
+					game.new();
+				}}
+			>
+				New Game
+			</button>
+		{/if}
 	{/snippet}
 </Modal>
 
@@ -251,7 +266,7 @@
 	<div class="bg-surface-100-900 w-0 max-w-112 shrink grow p-4">
 		{#if player?.hp?.current}
 			<section class="flex">
-				<h1 class="h6 grow">Level 1</h1>
+				<h1 class="h6 grow">Floor {level?.current}/{level?.max}</h1>
 				<HelpMenu />
 			</section>
 			<section>

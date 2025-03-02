@@ -70,6 +70,12 @@ export interface Inventory {
 	z?: number;
 }
 
+export interface Level {
+	current: number;
+	max: number;
+	exiles: Entity[];
+}
+
 export interface Statuses {
 	poisoned?: true | number;
 	immobilized?: true | number;
@@ -88,11 +94,13 @@ export interface Entity {
 	hp?: HP;
 	inventory?: Inventory;
 	letter?: Letter;
+	level?: Level;
 	onEnter?: string;
 	onTurnEnd?: string;
 	name?: string;
 	player?: true;
 	team?: string;
+	threat?: number;
 	statuses?: Statuses;
 	synonyms?: string[];
 }

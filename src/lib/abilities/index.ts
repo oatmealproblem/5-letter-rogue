@@ -1,5 +1,5 @@
 import { type TemplateId, templates } from '$lib/templates';
-import type { Ability } from '$lib/types';
+import type { Ability, Letter } from '$lib/types';
 
 import { blast } from './blast';
 import { exile } from './exile';
@@ -30,3 +30,10 @@ for (const ability of Object.values(abilities)) {
 }
 
 export default abilities;
+
+export const letterWeights: Partial<Record<Letter, number>> = {};
+for (const key of Object.keys(abilities).filter((key) => key.length === 5)) {
+	for (const letter of key.split('')) {
+		letterWeights[letter as Letter] = (letterWeights[letter as Letter] ?? 0) + 1;
+	}
+}

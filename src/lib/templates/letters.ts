@@ -7,6 +7,7 @@ export const letters = Object.fromEntries(
 		{
 			letter,
 			name: letter.toUpperCase(),
+			description: `The letter ${letter.toUpperCase()}; you can pick it up!`,
 			glyph: {
 				char: letter.toUpperCase(),
 				class: 'font-letter text-gray-300 z-40',

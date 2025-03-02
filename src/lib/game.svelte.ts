@@ -1,14 +1,19 @@
 import * as devalue from 'devalue';
+import { RNG } from 'rot-js';
 import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import type { SetRequired } from 'type-fest';
 
+import { letterWeights } from './abilities';
 import { playSound, type SoundId } from './audio';
 import { LETTERS } from './constants';
+import { getPosInRange, isSamePos } from './geo';
+import { rangeFromTo } from './math';
 import { aiSystem } from './systems/aiSystem';
 import { statusSystem } from './systems/statusSystem';
 import { turnEndSystem } from './systems/turnEndSystem';
-import { createFromTemplate } from './templates';
-import type { Entity, Pos } from './types';
+import { createFromTemplate, type TemplateId, templates } from './templates';
+import { terrain } from './templates/terrain';
+import type { Entity, Letter, Pos } from './types';
 
 const GUARANTEED_KEYS = new Set(['id', 'x', 'y']);
 
@@ -176,40 +181,124 @@ export class Game {
 			}
 		}
 	}
+
+	new() {
+		this.reset();
+
+		const level: Entity = {
+			id: 'level',
+			x: 0,
+			y: 0,
+			level: {
+				current: 0,
+				max: 10,
+				exiles: [],
+			},
+		};
+		this.add(level);
+
+		const player: Entity = {
+			id: 'player',
+			name: 'player',
+			description: 'This is you.',
+			x: 7,
+			y: 7,
+			attack: { damage: 1 },
+			glyph: { char: '@', class: 'font-creature text-white z-50' },
+			hp: { current: 10, max: 10 },
+			inventory: Object.fromEntries(LETTERS.map((l) => [l, 1])),
+			player: true,
+			statuses: {},
+			team: 'player',
+		};
+		this.add(player);
+
+		this.nextLevel();
+
+		this.save();
+	}
+
+	nextLevel({ collectLetters = true } = {}) {
+		const level = $state.snapshot(this.get('level'));
+		const player = $state.snapshot(this.get('player'));
+		const letters = $state.snapshot(this.with('letter'));
+		if (!player?.player) throw new Error('Player not found');
+		if (!level?.level) throw new Error('Level not found');
+		this.reset();
+
+		player.x = 7;
+		player.y = 7;
+		this.add(player);
+
+		if (collectLetters) {
+			for (const letter of letters) {
+				if (player.inventory) {
+					player.inventory[letter.letter] = (player.inventory[letter.letter] ?? 0) + 1;
+				}
+			}
+		}
+
+		level.level.current++;
+		this.add(level);
+
+		const emptyPositions = RNG.shuffle(
+			getPosInRange(player, 7, 'chebyshev').filter((pos) => !isSamePos(player, pos)),
+		);
+
+		// terrain
+		const terrainList = Object.keys(terrain) as TemplateId[];
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		for (const _ of rangeFromTo(0, Math.floor(emptyPositions.length * 0.1))) {
+			const pos = emptyPositions.pop();
+			const terrainTemplateId = RNG.getItem(terrainList);
+			if (pos && terrainTemplateId) {
+				this.add(createFromTemplate(terrainTemplateId, pos));
+			}
+		}
+
+		// exiles
+		for (const exile of level.level.exiles) {
+			const pos = emptyPositions.pop();
+			if (pos) {
+				exile.x = pos.x;
+				exile.y = pos.y;
+				this.add(exile);
+			}
+		}
+		level.level.exiles = [];
+
+		// enemies
+		const targetThreat = level.level.current * 5;
+		let currentThreat = 0;
+		let threatIterations = 0;
+		const threatTemplates = Object.entries(templates).filter(([, template]) => template.threat);
+		while (currentThreat < targetThreat && threatIterations < 100) {
+			threatIterations++;
+			const weightedOptions = Object.fromEntries(
+				threatTemplates
+					.filter(([, template]) => (template.threat ?? 0) <= targetThreat - currentThreat)
+					.map(([id, template]) => [id, template.threat ?? 0]),
+			);
+			const templateId = RNG.getWeightedValue(weightedOptions);
+			const pos = emptyPositions.pop();
+			if (templateId && pos) {
+				this.add(createFromTemplate(templateId as TemplateId, pos));
+				currentThreat += templates[templateId as TemplateId].threat ?? 0;
+			}
+		}
+
+		// letters
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		for (const _ of rangeFromTo(0, Math.floor(emptyPositions.length * 0.05))) {
+			const pos = emptyPositions.pop();
+			const letter = RNG.getWeightedValue(letterWeights);
+			if (letter && pos) {
+				this.add(createFromTemplate(letter as Letter, pos));
+			}
+		}
+	}
 }
 
 export const game = new Game();
 game.load();
 game.registerSfxHandler(playSound);
-
-export function initGame() {
-	game.reset();
-
-	const player: Entity = {
-		id: 'player',
-		name: 'player',
-		description: 'This is you.',
-		x: 7,
-		y: 7,
-		attack: { damage: 1 },
-		glyph: { char: '@', class: 'font-creature text-white z-50' },
-		hp: { current: 10, max: 10 },
-		inventory: Object.fromEntries(LETTERS.map((l) => [l, 1])),
-		player: true,
-		statuses: {},
-		team: 'player',
-	};
-	game.add(player);
-
-	const snake = createFromTemplate('snake', { x: 2, y: 3 });
-	game.add(snake);
-
-	const snake2 = createFromTemplate('snake', { x: 12, y: 10, team: 'player' });
-	game.add(snake2);
-
-	game.add(createFromTemplate('water', { x: 5, y: 5 }));
-	game.add(createFromTemplate('abyss', { x: 4, y: 5 }));
-	game.add(createFromTemplate('flame', { x: 3, y: 5 }));
-
-	game.save();
-}
