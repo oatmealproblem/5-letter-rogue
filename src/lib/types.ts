@@ -78,8 +78,9 @@ export interface Level {
 }
 
 export interface Statuses {
-	poisoned?: true | number;
 	immobilized?: true | number;
+	loyal?: true | number;
+	poisoned?: true | number;
 }
 export type Status = keyof Statuses;
 

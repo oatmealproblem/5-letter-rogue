@@ -10,6 +10,10 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 		classification: 'negative',
 		description: 'Prevents movement',
 	},
+	loyal: {
+		classification: 'positive',
+		description: 'Cannot be charmed',
+	},
 	poisoned: {
 		classification: 'negative',
 		description: 'Prevents all healing',

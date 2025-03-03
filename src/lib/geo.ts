@@ -96,3 +96,7 @@ export function isSamePos(a: Pos, b?: Pos): boolean | ((b: Pos) => boolean) {
 export function isOutOfBounds({ x, y }: Pos) {
 	return x < 0 || y < 0 || x >= MAP_WIDTH || y >= MAP_HEIGHT;
 }
+
+export function stripPos(pos: Pos) {
+	return { x: pos.x, y: pos.y };
+}

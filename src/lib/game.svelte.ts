@@ -199,7 +199,7 @@ export class Game {
 
 		const player: Entity = {
 			id: 'player',
-			name: 'player',
+			name: 'rogue',
 			description: 'This is you.',
 			x: 7,
 			y: 7,
@@ -222,6 +222,9 @@ export class Game {
 		const level = $state.snapshot(this.get('level'));
 		const player = $state.snapshot(this.get('player'));
 		const letters = $state.snapshot(this.with('letter'));
+		const loyalAllies = $state.snapshot(
+			this.with('statuses').filter((e) => e.team === 'player' && e.statuses.loyal && !e.player),
+		);
 		if (!player?.player) throw new Error('Player not found');
 		if (!level?.level) throw new Error('Level not found');
 		this.reset();
@@ -253,6 +256,16 @@ export class Game {
 			const terrainTemplateId = RNG.getItem(terrainList);
 			if (pos && terrainTemplateId) {
 				this.add(createFromTemplate(terrainTemplateId, pos));
+			}
+		}
+
+		// allies
+		for (const ally of loyalAllies) {
+			const pos = emptyPositions.pop();
+			if (pos) {
+				ally.x = pos.x;
+				ally.y = pos.y;
+				this.add(ally);
 			}
 		}
 

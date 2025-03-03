@@ -7,10 +7,12 @@ import * as healingAbilities from './healing';
 import * as nonPlayerAbilities from './nonPlayer';
 import { shoot } from './shoot';
 import { createSummonAbility } from './summon';
+import * as teamAbilities from './team';
 
 const abilities: Record<string, Ability> = {
 	...nonPlayerAbilities,
 	...healingAbilities,
+	...teamAbilities,
 	blast,
 	exile,
 	shoot,
