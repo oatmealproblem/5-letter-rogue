@@ -28,6 +28,15 @@ export interface Ability {
 
 export type Letter = keyof Inventory;
 
+export interface AI {
+	abilities: {
+		ability: string;
+		countsAsTurn: boolean;
+		cooldown: number;
+		currentCooldown: number;
+	}[];
+}
+
 export interface Attack {
 	damage: number;
 	inflicts?: Partial<Record<Status, number>>;
@@ -41,6 +50,7 @@ export interface Glyph {
 export interface HP {
 	current: number;
 	max: number;
+	partial?: number; // used for healing
 }
 
 export interface Inventory {
@@ -87,6 +97,7 @@ export interface Statuses {
 	immobilized?: true | number;
 	loyal?: true | number;
 	poisoned?: true | number;
+	rejuvenating?: true | number;
 	stunned?: true | number;
 }
 export type Status = keyof Statuses;
@@ -95,7 +106,7 @@ export interface Entity {
 	id: string;
 	x: number;
 	y: number;
-	ai?: true;
+	ai?: AI;
 	aiCost?: number;
 	attack?: Attack;
 	description?: string;

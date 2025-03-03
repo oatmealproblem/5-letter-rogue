@@ -1,3 +1,5 @@
+import * as devalue from 'devalue';
+
 import type { Game } from '$lib/game.svelte';
 import type { Ability, Entity, Pos } from '$lib/types';
 
@@ -26,4 +28,9 @@ export function has<T extends keyof Omit<Entity, 'id' | 'x' | 'y'>>(
 ): (entity: Entity) => entity is Entity & Required<Pick<Entity, T>> {
 	return (entity: Entity): entity is Entity & Required<Pick<Entity, T>> =>
 		components.every((c) => entity[c]);
+}
+
+// structuredClone doesn't work on proxies
+export function deepClone<T>(value: T): T {
+	return devalue.parse(devalue.stringify(value));
 }

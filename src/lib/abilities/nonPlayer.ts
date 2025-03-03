@@ -1,7 +1,10 @@
+import { RNG } from 'rot-js';
+
 import { damage } from '$lib/actions/damage';
 import { inflict } from '$lib/actions/inflict';
 import type { Ability } from '$lib/types';
 
+import { split } from './clone';
 import { exile } from './exile';
 import { isEntity } from './utils';
 
@@ -63,5 +66,21 @@ export const flameOnTurnEnd: Ability = {
 			}
 		}
 		return true;
+	},
+};
+
+export const slimeSplit: Ability = {
+	name: 'slimeSplit',
+	description: '',
+	attributes: {},
+	highlight() {
+		return { guide: [], harm: [], help: [] };
+	},
+	execute(actor, target, game) {
+		if (!actor) return false;
+		if (actor.hp?.current === actor.hp?.max && RNG.getUniform() <= 0.25) {
+			return split.execute(actor, actor, game);
+		}
+		return false;
 	},
 };

@@ -8,6 +8,9 @@ export function statusSystem(game: Game) {
 			if (key === 'bleeding' && entity.statuses[key] && entity.hp) {
 				actions.damage({ game, target: entity, amount: 1, type: 'raw' });
 			}
+			if (key === 'rejuvenating' && entity.statuses[key] && entity.hp) {
+				actions.heal({ target: entity, amount: entity.hp.max * 0.1 });
+			}
 			if (typeof entity.statuses[key] === 'number') {
 				if (entity.statuses[key] <= 1) {
 					delete entity.statuses[key];

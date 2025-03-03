@@ -3,12 +3,12 @@ import type { SetOptional } from 'type-fest';
 
 import type { Entity, Template } from '$lib/types';
 
-import { enemies } from './enemies';
+import { creatures } from './creatures';
 import { letters } from './letters';
 import { terrain } from './terrain';
 
 const templates = {
-	...enemies,
+	...creatures,
 	...letters,
 	...terrain,
 };

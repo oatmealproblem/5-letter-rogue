@@ -1,6 +1,7 @@
 import PriorityQueue from 'priorityqueuejs';
 import { RNG } from 'rot-js';
 
+import abilities from '$lib/abilities';
 import actions from '$lib/actions';
 import type { Game } from '$lib/game.svelte';
 import {
@@ -17,7 +18,27 @@ import type { Pos } from '$lib/types';
 export function aiSystem(game: Game) {
 	for (const actor of game.with('ai')) {
 		if (!game.get(actor.id)) continue; // killed by previous actions
-		if (actor.team && actor.attack) {
+		if (actor.statuses?.stunned) continue;
+
+		let turnTaken = false;
+		for (const aiAbility of actor.ai.abilities) {
+			if (aiAbility.currentCooldown <= 0) {
+				let success = false;
+				if (!aiAbility.countsAsTurn || !turnTaken) {
+					success = abilities[aiAbility.ability]?.execute(actor, actor, game);
+				}
+				if (success) {
+					aiAbility.currentCooldown = aiAbility.cooldown;
+				}
+				if (success && aiAbility.countsAsTurn) {
+					turnTaken = true;
+				}
+			} else {
+				aiAbility.currentCooldown--;
+			}
+		}
+
+		if (!turnTaken && actor.team && actor.attack) {
 			const target = game
 				.with('team', 'hp')
 				.filter(

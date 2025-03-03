@@ -34,6 +34,10 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 		classification: 'positive',
 		description: 'Cannot be charmed',
 	},
+	rejuvenating: {
+		classification: 'positive',
+		description: 'Heals 10% every turn',
+	},
 	poisoned: {
 		classification: 'negative',
 		description: 'Prevents all healing',
