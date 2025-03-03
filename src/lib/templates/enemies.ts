@@ -3,7 +3,7 @@ import type { Template } from '$lib/types';
 export const enemies = {
 	snake: {
 		name: 'snake',
-		synonyms: ['viper'],
+		synonyms: ['adder', 'cobra', 'viper'],
 		description: 'Attacks for 1 damage and 3 poison',
 		ai: true,
 		attack: { damage: 1, inflicts: { poisoned: 3 } },
