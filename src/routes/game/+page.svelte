@@ -161,7 +161,7 @@
 					game.nextLevel();
 				}}
 			>
-				Collect Letters and Descend
+				Collect letters and descend
 			</button>
 		{:else}
 			<button

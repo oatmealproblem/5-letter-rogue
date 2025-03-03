@@ -6,6 +6,10 @@ export interface StatusMetadata {
 }
 
 export const STATUS_METADATA: Record<Status, StatusMetadata> = {
+	floating: {
+		classification: 'positive',
+		description: 'Ignore terrain effects',
+	},
 	immobilized: {
 		classification: 'negative',
 		description: 'Prevents movement',

@@ -13,7 +13,7 @@ export const waterOnEnter: Ability = {
 		return { guide: [], harm: [], help: [] };
 	},
 	execute(actor, target) {
-		if (isEntity(target)) {
+		if (isEntity(target) && !target.statuses?.floating) {
 			inflict({ target, status: 'immobilized', duration: 2 });
 		}
 		return true;
@@ -21,20 +21,24 @@ export const waterOnEnter: Ability = {
 };
 
 export const abyssOnEnter: Ability = {
-	name: 'waterOnEnter',
+	name: 'abyssOnEnter',
 	description: '',
 	attributes: {},
 	highlight() {
 		return { guide: [], harm: [], help: [] };
 	},
 	execute(actor, target, game) {
-		if (isEntity(target) && target.hp) {
-			damage({ game, target, amount: Math.floor(target.hp?.current / 2) });
-		}
-		if (isEntity(target) && target.player) {
-			game.nextLevel({ collectLetters: false });
-		} else {
-			exile.execute(actor, target, game);
+		for (const entity of game.at(target)) {
+			if (!entity.statuses?.floating) {
+				if (entity.hp) {
+					damage({ game, target: entity, amount: Math.floor(entity.hp?.current / 2) });
+				}
+				if (entity.player) {
+					game.nextLevel({ collectLetters: false });
+				} else {
+					exile.execute(actor, entity, game);
+				}
+			}
 		}
 		return true;
 	},
@@ -49,7 +53,9 @@ export const flameOnTurnEnd: Ability = {
 	},
 	execute(actor, target, game) {
 		for (const entity of game.at(target)) {
-			damage({ game, target: entity, amount: 1 });
+			if (!entity.statuses?.floating) {
+				damage({ game, target: entity, amount: 1 });
+			}
 		}
 		return true;
 	},

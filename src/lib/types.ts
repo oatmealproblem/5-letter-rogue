@@ -16,6 +16,7 @@ export interface Ability {
 		physicalDamage?: number;
 		magicDamage?: number;
 		healing?: number;
+		duration?: number;
 	};
 	highlight: (
 		actor: Entity | null,
@@ -78,6 +79,7 @@ export interface Level {
 }
 
 export interface Statuses {
+	floating?: true | number;
 	immobilized?: true | number;
 	loyal?: true | number;
 	poisoned?: true | number;

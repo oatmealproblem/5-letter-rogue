@@ -9,6 +9,7 @@ export const terrain = {
 			class: 'bg-black text-gray-800 font-terrain',
 		},
 		onEnter: 'abyssOnEnter',
+		onTurnEnd: 'abyssOnEnter',
 		aiCost: Infinity,
 	},
 	flame: {

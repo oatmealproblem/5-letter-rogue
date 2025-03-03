@@ -6,7 +6,7 @@ export function getHighlightClass(pos: Pos, highlights: ReturnType<Ability['high
 	if (highlights.harm.some(filterFn)) {
 		return 'bg-error-200-800';
 	} else if (highlights.help.some(filterFn)) {
-		return 'bg-success-200-800';
+		return 'bg-success-50-950';
 	} else if (highlights.guide.some(filterFn)) {
 		return 'bg-primary-200-800';
 	} else {
@@ -19,7 +19,7 @@ export function getHighlightBorderClass(pos: Pos, highlights: ReturnType<Ability
 	if (highlights.harm.some(filterFn)) {
 		return 'inset-ring-4 inset-ring-error-200-800';
 	} else if (highlights.help.some(filterFn)) {
-		return 'inset-ring-4 inset-ring-success-200-800';
+		return 'inset-ring-4 inset-ring-success-50-950';
 	} else if (highlights.guide.some(filterFn)) {
 		return 'inset-ring-4 inset-ring-primary-200-800';
 	} else {
