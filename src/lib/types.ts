@@ -15,13 +15,14 @@ export interface Ability {
 		radius?: number;
 		physicalDamage?: number;
 		magicDamage?: number;
+		healing?: number;
 	};
 	highlight: (
 		actor: Entity | null,
 		target: Pos | Entity,
 		game: Game,
 	) => { guide: Pos[]; harm: Pos[]; help: Pos[] };
-	execute: (actor: Entity | null, targetPos: Pos | Entity, game: Game) => boolean;
+	execute: (actor: Entity | null, target: Pos | Entity, game: Game) => boolean;
 }
 
 export type Letter = keyof Inventory;

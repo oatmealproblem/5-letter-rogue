@@ -13,9 +13,6 @@ export function attack({ game, actor, target }: { game: Game; actor: Entity; tar
 				number,
 			][]) {
 				inflict({ target, status, duration });
-				const current = target.statuses[status as Status] ?? 0;
-				if (current === true) continue;
-				target.statuses[status as Status] = current + duration;
 			}
 		}
 		game.playVfx('slash', target);

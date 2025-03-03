@@ -3,23 +3,27 @@ import type { Ability, Letter } from '$lib/types';
 
 import { blast } from './blast';
 import { exile } from './exile';
+import * as healingAbilities from './healing';
 import * as nonPlayerAbilities from './nonPlayer';
 import { shoot } from './shoot';
 import { createSummonAbility } from './summon';
 
 const abilities: Record<string, Ability> = {
 	...nonPlayerAbilities,
+	...healingAbilities,
 	blast,
 	exile,
 	shoot,
 };
 
 for (const [templateId] of Object.entries(templates).filter((t) => t[1].ai)) {
+	if (abilities[templateId]) throw new Error(`Duplicate ability: ${templateId}`);
 	abilities[templateId] = createSummonAbility(templateId as TemplateId);
 }
 
 for (const ability of Object.values(abilities)) {
 	for (const synonym of ability.synonyms ?? []) {
+		if (abilities[synonym]) throw new Error(`Duplicate ability: ${synonym}`);
 		abilities[synonym] = {
 			...ability,
 			name: synonym,
