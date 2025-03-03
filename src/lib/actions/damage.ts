@@ -14,13 +14,19 @@ export function damage({
 	game: Game;
 	target: Entity;
 	amount: number;
-	type: 'physical' | 'magic';
+	type: 'physical' | 'magic' | 'raw';
 }) {
 	if (target.hp) {
 		let resolvedAmount = amount;
+		// armor reduces physical damage
 		if (target.statuses?.armored && type === 'physical') {
 			resolvedAmount -= 1;
 		}
+		// nothing changes raw damage
+		if (type === 'raw') {
+			resolvedAmount = amount;
+		}
+		// damage can never be negative
 		resolvedAmount = Math.max(resolvedAmount, 0);
 		target.hp.current -= resolvedAmount;
 		if (target.hp.current <= 0) {

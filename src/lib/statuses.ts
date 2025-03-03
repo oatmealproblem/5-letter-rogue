@@ -10,6 +10,10 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 		classification: 'positive',
 		description: 'Reduce physical damage by 1',
 	},
+	bleeding: {
+		classification: 'negative',
+		description: 'Take 1 damage every turn',
+	},
 	dodging: {
 		classification: 'positive',
 		description: 'Evade all attacks (but not abilities)',
@@ -33,6 +37,10 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 	poisoned: {
 		classification: 'negative',
 		description: 'Prevents all healing',
+	},
+	stunned: {
+		classification: 'negative',
+		description: 'Cannot act and takes double damage from attacks',
 	},
 };
 

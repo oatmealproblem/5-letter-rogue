@@ -6,6 +6,7 @@ import * as defendAbilities from './defend';
 import { exile } from './exile';
 import * as healingAbilities from './healing';
 import * as letterAbilities from './letter';
+import * as meleeAbilities from './melee';
 import * as movementAbilities from './movement';
 import * as nonPlayerAbilities from './nonPlayer';
 import * as rangedAbilities from './ranged';
@@ -17,6 +18,7 @@ const abilities: Record<string, Ability> = {
 	...defendAbilities,
 	...healingAbilities,
 	...letterAbilities,
+	...meleeAbilities,
 	...movementAbilities,
 	...nonPlayerAbilities,
 	...rangedAbilities,

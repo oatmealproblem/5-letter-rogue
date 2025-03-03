@@ -37,7 +37,7 @@ export const blink: Ability = {
 export const vault: Ability = {
 	name: 'vault',
 	synonyms: ['bound'],
-	description: 'jump to any space a 4-tile radius and attack everything in the path',
+	description: 'jump to any space in a 4-tile radius and attack everything in the path',
 	attributes: {
 		radius: 4,
 	},
@@ -61,7 +61,6 @@ export const vault: Ability = {
 			game,
 		});
 		if (actor && highlights.help.length) {
-			game.playSfx('magic');
 			actions.move({
 				game,
 				actor,

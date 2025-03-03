@@ -1,14 +1,18 @@
+import actions from '$lib/actions';
 import type { Game } from '$lib/game.svelte';
 import type { Status } from '$lib/types';
 
 export function statusSystem(game: Game) {
-	for (const actor of game.with('statuses')) {
-		for (const key of Object.keys(actor.statuses) as Status[]) {
-			if (typeof actor.statuses[key] === 'number') {
-				if (actor.statuses[key] === 1) {
-					delete actor.statuses[key];
+	for (const entity of game.with('statuses')) {
+		for (const key of Object.keys(entity.statuses) as Status[]) {
+			if (key === 'bleeding' && entity.statuses[key] && entity.hp) {
+				actions.damage({ game, target: entity, amount: 1, type: 'raw' });
+			}
+			if (typeof entity.statuses[key] === 'number') {
+				if (entity.statuses[key] <= 1) {
+					delete entity.statuses[key];
 				} else {
-					actor.statuses[key]--;
+					entity.statuses[key]--;
 				}
 			}
 		}

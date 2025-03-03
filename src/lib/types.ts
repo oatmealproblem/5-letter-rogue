@@ -80,12 +80,14 @@ export interface Level {
 
 export interface Statuses {
 	armored?: true | number;
+	bleeding?: true | number;
 	dodging?: true | number;
 	floating?: true | number;
 	hidden?: true | number;
 	immobilized?: true | number;
 	loyal?: true | number;
 	poisoned?: true | number;
+	stunned?: true | number;
 }
 export type Status = keyof Statuses;
 
