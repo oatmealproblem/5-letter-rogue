@@ -6,7 +6,7 @@ import { exile } from './exile';
 import * as healingAbilities from './healing';
 import * as movementAbilities from './movement';
 import * as nonPlayerAbilities from './nonPlayer';
-import { shoot } from './shoot';
+import * as rangedAbilities from './ranged';
 import { createSummonAbility } from './summon';
 import * as teamAbilities from './team';
 
@@ -15,9 +15,9 @@ const abilities: Record<string, Ability> = {
 	...healingAbilities,
 	...teamAbilities,
 	...movementAbilities,
+	...rangedAbilities,
 	blast,
 	exile,
-	shoot,
 };
 
 for (const [templateId] of Object.entries(templates).filter((t) => t[1].ai)) {
