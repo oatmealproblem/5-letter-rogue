@@ -16,7 +16,12 @@ export const blast: Ability = {
 		game.playSfx('explosion');
 		for (const pos of this.highlight(actor, target, game).harm) {
 			for (const entity of game.at(pos)) {
-				actions.damage({ game, target: entity, amount: this.attributes.physicalDamage ?? 0 });
+				actions.damage({
+					game,
+					target: entity,
+					amount: this.attributes.physicalDamage ?? 0,
+					type: 'physical',
+				});
 			}
 		}
 		return true;

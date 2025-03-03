@@ -79,6 +79,8 @@ export interface Level {
 }
 
 export interface Statuses {
+	armored?: true | number;
+	dodging?: true | number;
 	floating?: true | number;
 	hidden?: true | number;
 	immobilized?: true | number;

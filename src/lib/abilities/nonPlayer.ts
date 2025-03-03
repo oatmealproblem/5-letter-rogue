@@ -31,7 +31,12 @@ export const abyssOnEnter: Ability = {
 		for (const entity of game.at(target)) {
 			if (!entity.statuses?.floating) {
 				if (entity.hp) {
-					damage({ game, target: entity, amount: Math.floor(entity.hp?.current / 2) });
+					damage({
+						game,
+						target: entity,
+						amount: Math.floor(entity.hp?.current / 2),
+						type: 'physical',
+					});
 				}
 				if (entity.player) {
 					game.nextLevel({ collectLetters: false });
@@ -54,7 +59,7 @@ export const flameOnTurnEnd: Ability = {
 	execute(actor, target, game) {
 		for (const entity of game.at(target)) {
 			if (!entity.statuses?.floating) {
-				damage({ game, target: entity, amount: 1 });
+				damage({ game, target: entity, amount: 1, type: 'magic' });
 			}
 		}
 		return true;

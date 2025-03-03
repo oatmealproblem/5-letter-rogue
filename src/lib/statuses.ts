@@ -6,6 +6,14 @@ export interface StatusMetadata {
 }
 
 export const STATUS_METADATA: Record<Status, StatusMetadata> = {
+	armored: {
+		classification: 'positive',
+		description: 'Reduce physical damage by 1',
+	},
+	dodging: {
+		classification: 'positive',
+		description: 'Evade all attacks (but not abilities)',
+	},
 	floating: {
 		classification: 'positive',
 		description: 'Ignore terrain effects',

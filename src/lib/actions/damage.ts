@@ -5,9 +5,24 @@ import { isOutOfBounds } from '$lib/geo';
 import { createFromTemplate } from '$lib/templates';
 import type { Entity, Letter } from '$lib/types';
 
-export function damage({ game, target, amount }: { game: Game; target: Entity; amount: number }) {
+export function damage({
+	game,
+	target,
+	amount,
+	type,
+}: {
+	game: Game;
+	target: Entity;
+	amount: number;
+	type: 'physical' | 'magic';
+}) {
 	if (target.hp) {
-		target.hp.current -= amount;
+		let resolvedAmount = amount;
+		if (target.statuses?.armored && type === 'physical') {
+			resolvedAmount -= 1;
+		}
+		resolvedAmount = Math.max(resolvedAmount, 0);
+		target.hp.current -= resolvedAmount;
 		if (target.hp.current <= 0) {
 			game.remove(target);
 			if (target.name && target.team !== 'player') {

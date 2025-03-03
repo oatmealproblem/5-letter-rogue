@@ -21,7 +21,12 @@ export const shoot: Ability = {
 		game.playSfx('laser');
 		for (const pos of this.highlight(actor, target, game).harm) {
 			for (const entity of game.at(pos)) {
-				actions.damage({ game, target: entity, amount: this.attributes.physicalDamage ?? 0 });
+				actions.damage({
+					game,
+					target: entity,
+					amount: this.attributes.physicalDamage ?? 0,
+					type: 'physical',
+				});
 			}
 		}
 		return true;
@@ -41,7 +46,12 @@ export const laser: Ability = {
 	execute(actor, target, game) {
 		for (const pos of getTargetEntities({ ability: this, kind: 'harm', actor, target, game })) {
 			for (const entity of game.at(pos)) {
-				actions.damage({ game, target: entity, amount: this.attributes.magicDamage ?? 0 });
+				actions.damage({
+					game,
+					target: entity,
+					amount: this.attributes.magicDamage ?? 0,
+					type: 'magic',
+				});
 			}
 		}
 		game.playSfx('laser');

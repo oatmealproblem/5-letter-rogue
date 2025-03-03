@@ -2,6 +2,7 @@ import { type TemplateId, templates } from '$lib/templates';
 import type { Ability, Letter } from '$lib/types';
 
 import { blast } from './blast';
+import * as defendAbilities from './defend';
 import { exile } from './exile';
 import * as healingAbilities from './healing';
 import * as letterAbilities from './letter';
@@ -13,13 +14,14 @@ import { createSummonAbility } from './summon';
 import * as teamAbilities from './team';
 
 const abilities: Record<string, Ability> = {
-	...nonPlayerAbilities,
+	...defendAbilities,
 	...healingAbilities,
-	...teamAbilities,
-	...movementAbilities,
 	...letterAbilities,
+	...movementAbilities,
+	...nonPlayerAbilities,
 	...rangedAbilities,
 	...sneakAbilities,
+	...teamAbilities,
 	blast,
 	exile,
 };
