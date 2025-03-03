@@ -4,6 +4,7 @@ import type { Ability, Letter } from '$lib/types';
 import { blast } from './blast';
 import { exile } from './exile';
 import * as healingAbilities from './healing';
+import * as letterAbilities from './letter';
 import * as movementAbilities from './movement';
 import * as nonPlayerAbilities from './nonPlayer';
 import * as rangedAbilities from './ranged';
@@ -15,6 +16,7 @@ const abilities: Record<string, Ability> = {
 	...healingAbilities,
 	...teamAbilities,
 	...movementAbilities,
+	...letterAbilities,
 	...rangedAbilities,
 	blast,
 	exile,

@@ -26,7 +26,7 @@ export function getPosInRange(
 		)
 		.filter((pos) => {
 			if (distanceType === 'euclidean') {
-				return getEuclideanDistance(from, pos) <= range;
+				return Math.round(getEuclideanDistance(from, pos)) <= range;
 			}
 			if (distanceType === 'manhattan') {
 				return getManhattanDistance(from, pos) <= range;

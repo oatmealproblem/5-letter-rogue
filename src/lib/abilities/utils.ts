@@ -20,3 +20,10 @@ export function getTargetEntities({
 }) {
 	return ability.highlight(actor, target, game)[kind].flatMap((pos) => game.at(pos));
 }
+
+export function has<T extends keyof Omit<Entity, 'id' | 'x' | 'y'>>(
+	...components: [T, ...T[]]
+): (entity: Entity) => entity is Entity & Required<Pick<Entity, T>> {
+	return (entity: Entity): entity is Entity & Required<Pick<Entity, T>> =>
+		components.every((c) => entity[c]);
+}

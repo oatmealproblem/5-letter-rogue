@@ -4,7 +4,7 @@ export const exile: Ability = {
 	name: 'exile',
 	synonyms: ['expel'],
 	description: 'Sends a creature to the next level.',
-	attributes: { physicalDamage: 3, radius: 1 },
+	attributes: {},
 	highlight(actor, target, game) {
 		if (game.at(target).some((e) => e.ai)) {
 			return { guide: [target], harm: [target], help: [] };
