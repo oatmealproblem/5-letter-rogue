@@ -8,6 +8,7 @@ import * as letterAbilities from './letter';
 import * as movementAbilities from './movement';
 import * as nonPlayerAbilities from './nonPlayer';
 import * as rangedAbilities from './ranged';
+import * as sneakAbilities from './sneak';
 import { createSummonAbility } from './summon';
 import * as teamAbilities from './team';
 
@@ -18,6 +19,7 @@ const abilities: Record<string, Ability> = {
 	...movementAbilities,
 	...letterAbilities,
 	...rangedAbilities,
+	...sneakAbilities,
 	blast,
 	exile,
 };

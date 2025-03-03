@@ -3,7 +3,7 @@ import type { Template } from '$lib/types';
 export const terrain = {
 	abyss: {
 		name: 'abyss',
-		description: 'Fall to the next level, taking damage.',
+		description: 'Fall to the next level, losing half your current health.',
 		glyph: {
 			char: 'A',
 			class: 'bg-black text-gray-800 font-terrain',

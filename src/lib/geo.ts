@@ -100,3 +100,10 @@ export function isOutOfBounds({ x, y }: Pos) {
 export function stripPos(pos: Pos) {
 	return { x: pos.x, y: pos.y };
 }
+
+export const CARDINAL_DIRECTIONS = [
+	{ dx: 0, dy: -1 },
+	{ dx: 1, dy: 0 },
+	{ dx: 0, dy: 1 },
+	{ dx: -1, dy: 0 },
+];

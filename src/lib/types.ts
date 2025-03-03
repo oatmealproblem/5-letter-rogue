@@ -80,6 +80,7 @@ export interface Level {
 
 export interface Statuses {
 	floating?: true | number;
+	hidden?: true | number;
 	immobilized?: true | number;
 	loyal?: true | number;
 	poisoned?: true | number;

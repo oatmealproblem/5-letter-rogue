@@ -6,7 +6,12 @@ import { inflict } from './inflict';
 
 export function attack({ game, actor, target }: { game: Game; actor: Entity; target: Entity }) {
 	if (target.hp && actor.attack) {
-		damage({ game, target, amount: actor.attack.damage });
+		let damageMultiplier = 1;
+		if (actor.statuses?.hidden) {
+			damageMultiplier = 2;
+			actor.statuses.hidden = 1; // expires at end of turn, but still applies to other attacks in the same turn
+		}
+		damage({ game, target, amount: actor.attack.damage * damageMultiplier });
 		if (target.statuses && actor.attack.inflicts) {
 			for (const [status, duration] of Object.entries(actor.attack.inflicts) as [
 				Status,

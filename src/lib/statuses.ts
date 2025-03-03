@@ -10,6 +10,10 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 		classification: 'positive',
 		description: 'Ignore terrain effects',
 	},
+	hidden: {
+		classification: 'positive',
+		description: 'Invisible to enemies and deal double damage (then lose hidden)',
+	},
 	immobilized: {
 		classification: 'negative',
 		description: 'Prevents movement',

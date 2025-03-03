@@ -1,8 +1,10 @@
 import PriorityQueue from 'priorityqueuejs';
+import { RNG } from 'rot-js';
 
 import actions from '$lib/actions';
 import type { Game } from '$lib/game.svelte';
 import {
+	CARDINAL_DIRECTIONS,
 	getAdjacentPositions,
 	getManhattanDistance,
 	isOutOfBounds,
@@ -18,7 +20,10 @@ export function aiSystem(game: Game) {
 		if (actor.team && actor.attack) {
 			const target = game
 				.with('team', 'hp')
-				.filter((potentialTarget) => potentialTarget.team !== actor.team)
+				.filter(
+					(potentialTarget) =>
+						!potentialTarget.statuses?.hidden && potentialTarget.team !== actor.team,
+				)
 				.sort((a, b) => getManhattanDistance(actor, a) - getManhattanDistance(actor, b))[0];
 			if (target) {
 				if (getManhattanDistance(actor, target) === 1) {
@@ -50,6 +55,17 @@ export function aiSystem(game: Game) {
 							dx: path[0].x - actor.x,
 							dy: path[0].y - actor.y,
 						});
+					}
+				}
+			} else {
+				// no target, wander
+				if (RNG.getUniform() > 0.5) {
+					for (const dir of RNG.shuffle(CARDINAL_DIRECTIONS)) {
+						const destination = { x: actor.x + dir.dx, y: actor.y + dir.dy };
+						if (!game.at(destination).some((e) => e.aiCost)) {
+							actions.move({ game, actor, ...dir });
+							break;
+						}
 					}
 				}
 			}
