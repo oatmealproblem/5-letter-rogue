@@ -10,7 +10,7 @@
 {#each Object.values(templates)
 	.filter((t): t is SetRequired<Entity, 'name'> => Boolean(t.name && t.ai))
 	.toSorted((a, b) => a.name.localeCompare(b.name)) as template (template.name)}
-	<section class="card bg-surface-200-800 p-4">
+	<section class="card bg-surface-100-900 p-4">
 		<header>
 			<h2 class="h4">{template.name}</h2>
 			{template.description}

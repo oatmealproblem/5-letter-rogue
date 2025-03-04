@@ -17,7 +17,7 @@
 
 	let creatures = $derived(game.with('ai'));
 
-	let nonCreatures = $derived(mousePos ? game.at(mousePos).filter((e) => !e.ai) : []);
+	let atCursor = $derived(mousePos ? game.at(mousePos) : []);
 
 	function getHpClass(entity: Entity) {
 		if (entity.team === 'player') {
@@ -30,11 +30,11 @@
 	}
 </script>
 
-<section class="mt-6 shrink overflow-auto">
+<section class="mt-2 shrink overflow-auto">
 	<ul onmouseleave={() => (hovered = null)}>
 		{#each creatures as creature (creature.id)}
 			<li
-				class="text-lg"
+				class="flex items-center gap-2 text-lg"
 				onmouseenter={() => {
 					hovered = creature;
 				}}
@@ -70,7 +70,10 @@
 				<StatusBadges entity={creature} />
 			</li>
 		{/each}
-		{#each nonCreatures as entity (entity.id)}
+		{#if atCursor.length}
+			<hr class="border-surface-100-900 my-4 border-t" />
+		{/if}
+		{#each atCursor as entity (entity.id)}
 			<li class="text-lg">
 				<span class="{entity.glyph?.class} border-surface-50-950 rounded-sm border-2 px-1 text-2xl">
 					{entity.glyph?.char}

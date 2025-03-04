@@ -11,7 +11,7 @@
 	const { children }: LayoutProps = $props();
 </script>
 
-<div class="bg-surface-100-900 mx-auto flex h-screen w-192 flex-col gap-2">
+<div class="mx-auto flex w-192 flex-col gap-2">
 	<AppBar>
 		{#snippet lead()}
 			<a href="#/game" onclick={() => playSound('uiClick')} class="btn-icon">

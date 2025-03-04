@@ -18,7 +18,7 @@
 	import StatusBadges from './StatusBadges.svelte';
 	import { getHighlightBorderClass, getHighlightClass } from './utils';
 
-	let spelling = $state<string | null>(null);
+	let spelling = $state<string>('');
 	let activeAbility = $state.raw<null | Ability>(null);
 	let mousePos = $state.raw<null | Pos>(null);
 	let player = $derived(game.get('player'));
@@ -79,8 +79,8 @@
 		const player = game.get('player');
 		let turnTaken = false;
 
-		if (spelling == null && !activeAbility && !gameOver) {
-			if ((e.key === 'ArrowLeft' || e.key === 'a') && player) {
+		if (!activeAbility && !gameOver) {
+			if ((e.key === 'ArrowLeft' || e.key === 'A') && player) {
 				const attackTarget = game.at({ x: player.x - 1, y: player.y }).find((e) => e.hp);
 				if (attackTarget) {
 					turnTaken = actions.attack({
@@ -92,7 +92,7 @@
 					turnTaken = actions.move({ game, actor: player, dx: -1, dy: 0 });
 				}
 			}
-			if ((e.key === 'ArrowRight' || e.key === 'd') && player) {
+			if ((e.key === 'ArrowRight' || e.key === 'D') && player) {
 				const attackTarget = game.at({ x: player.x + 1, y: player.y }).find((e) => e.hp);
 				if (attackTarget) {
 					turnTaken = actions.attack({
@@ -104,7 +104,7 @@
 					turnTaken = actions.move({ game, actor: player, dx: 1, dy: 0 });
 				}
 			}
-			if ((e.key === 'ArrowUp' || e.key === 'w') && player) {
+			if ((e.key === 'ArrowUp' || e.key === 'W') && player) {
 				const attackTarget = game.at({ x: player.x, y: player.y - 1 }).find((e) => e.hp);
 				if (attackTarget) {
 					turnTaken = actions.attack({
@@ -116,7 +116,7 @@
 					turnTaken = actions.move({ game, actor: player, dx: 0, dy: -1 });
 				}
 			}
-			if ((e.key === 'ArrowDown' || e.key === 's') && player) {
+			if ((e.key === 'ArrowDown' || e.key === 'S') && player) {
 				const attackTarget = game.at({ x: player.x, y: player.y + 1 }).find((e) => e.hp);
 				if (attackTarget) {
 					turnTaken = actions.attack({
@@ -128,7 +128,7 @@
 					turnTaken = actions.move({ game, actor: player, dx: 0, dy: 1 });
 				}
 			}
-			if (e.key === ' ') {
+			if (e.key === 'Z') {
 				turnTaken = true;
 			}
 		}
@@ -178,9 +178,27 @@
 </Modal>
 
 <div class="flex flex-wrap justify-center">
+	<div class="flex h-screen w-0 max-w-112 shrink grow flex-col p-4">
+		{#if player?.hp?.current}
+			<section class="flex">
+				<h1 class="h6 grow">Floor {level?.current}/{level?.max}</h1>
+				<HelpMenu />
+			</section>
+			<section>
+				<span class="text-success-700-300">HP: {player.hp.current}/{player.hp.max}</span>
+				<div>
+					<StatusBadges entity={player} />
+				</div>
+			</section>
+			<Inventory bind:spelling bind:activeAbility />
+		{:else}
+			DEAD
+		{/if}
+	</div>
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="bg-surface-50-950 animated relative flex flex-col overflow-hidden"
+		class="bg-surface-50-950 border-surface-100-900 relative flex flex-col overflow-hidden border-x"
+		class:animated={true}
 		style:width="100vmin"
 		style:height="100vmin"
 		onmouseleave={() => {
@@ -213,7 +231,7 @@
 												(player.inventory[letter as Letter] ?? 1) - 1;
 										}
 									}
-									spelling = null;
+									spelling = '';
 									activeAbility = null;
 								}
 							}
@@ -263,22 +281,8 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="bg-surface-100-900 flex h-screen w-0 max-w-112 shrink grow flex-col p-4">
-		{#if player?.hp?.current}
-			<section class="flex">
-				<h1 class="h6 grow">Floor {level?.current}/{level?.max}</h1>
-				<HelpMenu />
-			</section>
-			<section>
-				<span class="text-success-700-300">HP: {player.hp.current}/{player.hp.max}</span>
-				<div>
-					<StatusBadges entity={player} />
-				</div>
-			</section>
-			<Inventory bind:spelling bind:activeAbility />
-			<Creatures {highlighted} bind:hovered {mousePos} />
-		{:else}
-			DEAD
-		{/if}
+	<div class="flex h-screen w-0 max-w-112 shrink grow flex-col p-4">
+		<p>Creatures:</p>
+		<Creatures {highlighted} bind:hovered {mousePos} />
 	</div>
 </div>

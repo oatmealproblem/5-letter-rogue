@@ -209,7 +209,7 @@ export const shove: Ability = {
 		});
 		const pos = line[0];
 		if (!pos) return { guide: [], harm: [], help: [] };
-		const harm = line.filter((pos) => game.at(pos).some((e) => e.hp));
+		const harm = game.at(pos).some((e) => e.hp) ? [pos] : [];
 		const guide = harm.length ? line.slice(1) : [pos];
 		return { guide, harm, help: [] };
 	},

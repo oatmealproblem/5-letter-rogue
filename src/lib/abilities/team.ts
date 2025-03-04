@@ -64,7 +64,6 @@ export const frame: Ability = {
 export const thank: Ability = {
 	name: 'thank',
 	description: 'Make an ally loyal (they cannot be charmed and will follow across levels)',
-	synonyms: ['credit'],
 	attributes: {},
 	highlight(actor, target, game) {
 		if (game.at(target).some((e) => e.team === actor?.team && e.statuses && !e?.statuses.loyal)) {
