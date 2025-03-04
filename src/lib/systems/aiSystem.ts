@@ -70,12 +70,23 @@ export function aiSystem(game: Game) {
 						includeEnd: false,
 					});
 					if (path?.length) {
-						actions.move({
+						const moved = actions.move({
 							game,
 							actor: actor,
 							dx: path[0].x - actor.x,
 							dy: path[0].y - actor.y,
 						});
+						if (actor.ai.canDoubleMove && path[1] && moved) {
+							actions.move({
+								game,
+								actor: actor,
+								dx: path[1].x - actor.x,
+								dy: path[1].y - actor.y,
+							});
+						}
+						if (actor.ai.canMoveAndAttack && getManhattanDistance(actor, target) === 1) {
+							actions.attack({ game, actor, target });
+						}
 					}
 				}
 			} else {

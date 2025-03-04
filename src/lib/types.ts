@@ -35,6 +35,8 @@ export interface AI {
 		cooldown: number;
 		currentCooldown: number;
 	}[];
+	canDoubleMove?: boolean;
+	canMoveAndAttack?: boolean;
 }
 
 export interface Attack {
@@ -98,6 +100,7 @@ export interface Statuses {
 	loyal?: true | number;
 	poisoned?: true | number;
 	rejuvenating?: true | number;
+	regenerating?: true | number;
 	stunned?: true | number;
 }
 export type Status = keyof Statuses;

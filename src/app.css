@@ -28,6 +28,9 @@
 	font-family: 'Kablammo';
 	font-variation-settings: 'MORF' 0;
 	font-style: oblique 1deg;
+}
+
+.animated .font-creature {
 	animation: morph 10s linear infinite;
 }
 

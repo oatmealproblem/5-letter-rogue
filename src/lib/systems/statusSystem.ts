@@ -11,6 +11,9 @@ export function statusSystem(game: Game) {
 			if (key === 'rejuvenating' && entity.statuses[key] && entity.hp) {
 				actions.heal({ target: entity, amount: entity.hp.max * 0.1 });
 			}
+			if (key === 'regenerating' && entity.statuses[key] && entity.hp) {
+				actions.heal({ target: entity, amount: entity.hp.max * 0.21 });
+			}
 			if (typeof entity.statuses[key] === 'number') {
 				if (entity.statuses[key] <= 1) {
 					delete entity.statuses[key];

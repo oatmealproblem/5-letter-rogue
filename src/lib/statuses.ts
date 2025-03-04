@@ -38,6 +38,10 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 		classification: 'positive',
 		description: 'Heals 10% every turn',
 	},
+	regenerating: {
+		classification: 'positive',
+		description: 'Heals 25% every turn',
+	},
 	poisoned: {
 		classification: 'negative',
 		description: 'Prevents all healing',
