@@ -60,6 +60,6 @@ export const NEGATIVE_STATUSES: Set<Status> = new Set(
 
 export const POSITIVE_STATUSES: Set<Status> = new Set(
 	Object.entries(STATUS_METADATA)
-		.filter((entry) => entry[1].classification === 'negative')
+		.filter((entry) => entry[1].classification === 'positive')
 		.map((entry) => entry[0] as Status),
 );

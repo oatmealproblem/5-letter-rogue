@@ -312,7 +312,10 @@ export class Game {
 
 		// letters
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		for (const _ of rangeFromTo(0, Math.floor(emptyPositions.length * 0.05))) {
+		for (const _ of rangeFromTo(
+			0,
+			Math.floor(emptyPositions.length * Math.min(level.level.current * 0.01, 0.1)),
+		)) {
 			const pos = emptyPositions.pop();
 			const letter = RNG.getWeightedValue(letterWeights);
 			if (letter && pos) {

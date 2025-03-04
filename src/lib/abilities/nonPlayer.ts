@@ -35,7 +35,7 @@ export const abyssOnEnter: Ability = {
 		return { guide: [], harm: [], help: [] };
 	},
 	execute(actor, target, game) {
-		for (const entity of game.at(target)) {
+		for (const entity of game.at(target).filter((e) => e.ai || e.player)) {
 			if (!entity.statuses?.floating) {
 				if (entity.hp) {
 					damage({
@@ -103,7 +103,7 @@ export const druidSummon: Ability = {
 			.sort((a, b) => getChebyshevDistance(actor, a) - getChebyshevDistance(actor, b))
 			.find((pos) => !game.at(pos).some((e) => e.hp || e.aiCost));
 		if (!pos) return false;
-		const options = ['eagle', 'hyena', 'snake', 'tiger'] as const;
+		const options = ['eagle', 'hyena', 'viper', 'tiger'] as const;
 		const level = game.get('level')?.level?.current ?? 1;
 		const template = RNG.getWeightedValue(
 			Object.fromEntries(

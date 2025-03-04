@@ -5,14 +5,22 @@
 	import { playSound } from '$lib/audio';
 	import { LETTERS } from '$lib/constants';
 	import { game } from '$lib/game.svelte';
+	import { stripPos } from '$lib/geo';
 	import { rangeFromTo } from '$lib/math';
-	import type { Ability, Letter } from '$lib/types';
+	import type { Ability, Letter, Pos } from '$lib/types';
 
 	interface Props {
 		spelling: string;
 		activeAbility: Ability | null;
+		cursorPos: Pos | null;
+		executeAbility: () => void;
 	}
-	let { spelling = $bindable(), activeAbility = $bindable() }: Props = $props();
+	let {
+		spelling = $bindable(),
+		activeAbility = $bindable(),
+		cursorPos = $bindable(),
+		executeAbility,
+	}: Props = $props();
 
 	let player = $derived(game.get('player'));
 
@@ -46,6 +54,9 @@
 		if (lower in abilities) {
 			playSound('uiClick');
 			activeAbility = abilities[lower as keyof typeof abilities];
+			if (!cursorPos && player) {
+				cursorPos = stripPos(player);
+			}
 		} else {
 			playSound('uiError');
 		}
@@ -61,19 +72,24 @@
 
 <svelte:window
 	onkeyup={(e) => {
-		if (!activeAbility) {
-			// escape, cancel
-			if (e.key === 'Escape') {
-				playSound('uiBack');
-				spelling = '';
-			}
+		// escape, cancel
+		if ((spelling || activeAbility) && e.key === 'Escape') {
+			playSound('uiBack');
+			spelling = '';
+			activeAbility = null;
+		}
 
-			// enter, try to cast
-			if (e.key === 'Enter' || e.key === ' ') {
-				// audio handled by cast()
+		// enter, try to cast
+		if (e.key === 'Enter' || e.key === ' ') {
+			// audio handled by executeAbility() and cast()
+			if (activeAbility) {
+				executeAbility();
+			} else {
 				cast();
 			}
+		}
 
+		if (!activeAbility) {
 			// typing controls
 			if (e.key === 'Backspace') {
 				playSound('uiClick');
@@ -87,23 +103,18 @@
 					playSound('uiError');
 				}
 			}
-		} else if (activeAbility) {
-			if (e.key === 'Escape') {
-				playSound('uiBack');
-				spelling = '';
-				activeAbility = null;
-			}
 		}
 	}}
 />
 
 <section class="mt-4">
-	<div class="flex flex-wrap gap-4">
+	<h2 class="font-bold">Inventory</h2>
+	<div class="mt-1 flex flex-wrap gap-4">
 		{#each LETTERS as letter}
 			{@const amount = player?.inventory?.[letter] ?? 0}
 			{@const upper = letter.toUpperCase()}
 			<button
-				class="btn relative size-10 {getLetterButtonClass(letter)}"
+				class="btn relative size-8 {getLetterButtonClass(letter)}"
 				disabled={amount === 0}
 				onclick={() => {
 					if (spelling == null) {
@@ -122,7 +133,9 @@
 			>
 				{upper}
 				{#if amount}
-					<span class="badge-icon preset-filled-secondary-200-800 absolute -top-2 -right-2">
+					<span
+						class="badge-icon preset-filled-secondary-200-800 absolute -top-2 -right-2 size-5 text-sm"
+					>
 						{amount}
 					</span>
 				{/if}
@@ -133,9 +146,9 @@
 		<div class="animated flex gap-4 text-2xl">
 			{#each rangeFromTo(0, 5) as i}
 				<span
-					class="	inline-block size-10 rounded-full text-center"
+					class="relative inline-block size-8 rounded-full text-center"
 					class:font-creature={activeAbility}
-					style:line-height={activeAbility ? '' : '3rem'}
+					style:line-height={activeAbility ? '1.5rem' : '2.5rem'}
 					class:preset-filled-primary-400-600={spelling[i] && i === 0}
 					class:preset-filled-primary-500={spelling[i] && i === 1}
 					class:preset-filled-primary-600-400={spelling[i] && i === 2}
@@ -143,6 +156,16 @@
 					class:preset-filled-primary-800-200={spelling[i] && i === 4}
 					class:preset-filled-surface-500={!spelling[i]}
 				>
+					{#if activeAbility}
+						<span
+							class="absolute top-0 left-0 inline-block size-8 animate-pulse rounded-full text-center ring-4"
+							class:ring-primary-400-600={spelling[i] && i === 0}
+							class:ring-primary-500={spelling[i] && i === 1}
+							class:ring-primary-600-400={spelling[i] && i === 2}
+							class:ring-primary-700-300={spelling[i] && i === 3}
+							class:ring-primary-800-200={spelling[i] && i === 4}
+						></span>
+					{/if}
 					{spelling[i] ?? ''}
 				</span>
 			{/each}
@@ -183,14 +206,20 @@
 	</div>
 	{#if activeAbility}
 		<p class="mt-4">
-			Casting: {activeAbility.name}{activeAbility.synonymOf ? ` (${activeAbility.synonymOf})` : ''} -
-			{activeAbility.description}
+			Casting: <strong>{activeAbility.name}</strong>
+			{#if activeAbility.synonymOf}
+				<em>
+					(syn. <strong>{activeAbility.synonymOf}</strong>
+					)
+				</em>
+			{/if}
+			- {activeAbility.description}
 		</p>
 	{:else}
 		<p class="mt-4">Perhaps...</p>
 		{#each suggestions as suggestion (suggestion)}
 			<button
-				class="mt-2 text-start"
+				class="mt-1 text-start text-sm"
 				onclick={() => {
 					spelling = suggestion;
 					cast();

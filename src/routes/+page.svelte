@@ -28,5 +28,4 @@
 	>
 		New Game
 	</a>
-	<a class="btn btn-lg preset-filled-secondary-700-300" href="#/help">How to Play</a>
 </div>

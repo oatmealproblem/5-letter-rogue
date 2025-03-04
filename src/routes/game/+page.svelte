@@ -9,25 +9,28 @@
 	import HelpMenu from '$lib/components/HelpMenu.svelte';
 	import { MAP_HEIGHT, MAP_WIDTH } from '$lib/constants';
 	import { game } from '$lib/game.svelte';
-	import { posToString } from '$lib/geo';
+	import { posToString, stripPos } from '$lib/geo';
 	import { rangeFromTo } from '$lib/math';
 	import { type Ability, type Entity, type Letter, type Pos } from '$lib/types';
 
 	import Creatures from './Creatures.svelte';
 	import Inventory from './Inventory.svelte';
+	import Kbd from './Kbd.svelte';
 	import StatusBadges from './StatusBadges.svelte';
 	import { getHighlightBorderClass, getHighlightClass } from './utils';
 
 	let spelling = $state<string>('');
 	let activeAbility = $state.raw<null | Ability>(null);
-	let mousePos = $state.raw<null | Pos>(null);
+	let arrowsMoveCursor = $state(true); // what do arrows move
+	let cursorPos = $state<null | Pos>(null);
+	let cursorPosSetByMouse = $state(false);
 	let player = $derived(game.get('player'));
 	let level = $derived(game.get('level')?.level);
 	let hovered = $state<null | Entity>(null);
 	let highlighted = $derived(
-		player && mousePos && activeAbility
-			? activeAbility.highlight(player, mousePos, game)
-			: { guide: mousePos ? [mousePos] : [], harm: [], help: [] },
+		player && cursorPos && activeAbility
+			? activeAbility.highlight(player, cursorPos, game)
+			: { guide: cursorPos ? [cursorPos] : [], harm: [], help: [] },
 	);
 
 	let defeat = $derived(!player);
@@ -72,6 +75,25 @@
 			return 'bg-warning-300-700';
 		}
 	}
+
+	function executeAbility() {
+		if (activeAbility && player && cursorPos) {
+			const success = activeAbility.execute(player, stripPos(cursorPos), game);
+			if (success) {
+				game.processTurn();
+				for (const letter of (spelling ?? '').toLowerCase().split('')) {
+					if (player?.inventory) {
+						player.inventory[letter as Letter] = (player.inventory[letter as Letter] ?? 1) - 1;
+					}
+				}
+				spelling = '';
+				activeAbility = null;
+				if (!cursorPosSetByMouse && !arrowsMoveCursor) {
+					cursorPos = null;
+				}
+			}
+		}
+	}
 </script>
 
 <svelte:window
@@ -79,57 +101,57 @@
 		const player = game.get('player');
 		let turnTaken = false;
 
-		if (!activeAbility && !gameOver) {
-			if ((e.key === 'ArrowLeft' || e.key === 'A') && player) {
-				const attackTarget = game.at({ x: player.x - 1, y: player.y }).find((e) => e.hp);
-				if (attackTarget) {
-					turnTaken = actions.attack({
-						game,
-						actor: player,
-						target: attackTarget,
-					});
+		const handleDir = ({ dx, dy }: { dx: number; dy: number }) => {
+			if (player) {
+				if (activeAbility || arrowsMoveCursor) {
+					cursorPosSetByMouse = false;
+					if (cursorPos) {
+						cursorPos.x += dx;
+						cursorPos.y += dy;
+					} else {
+						cursorPos = { x: player.x + dx, y: player.y + dy };
+					}
 				} else {
-					turnTaken = actions.move({ game, actor: player, dx: -1, dy: 0 });
+					const attackTarget = game.at({ x: player.x + dx, y: player.y + dy }).find((e) => e.hp);
+					if (attackTarget) {
+						turnTaken = actions.attack({
+							game,
+							actor: player,
+							target: attackTarget,
+						});
+					} else {
+						turnTaken = actions.move({ game, actor: player, dx, dy });
+					}
 				}
 			}
-			if ((e.key === 'ArrowRight' || e.key === 'D') && player) {
-				const attackTarget = game.at({ x: player.x + 1, y: player.y }).find((e) => e.hp);
-				if (attackTarget) {
-					turnTaken = actions.attack({
-						game,
-						actor: player,
-						target: attackTarget,
-					});
-				} else {
-					turnTaken = actions.move({ game, actor: player, dx: 1, dy: 0 });
-				}
+		};
+
+		if (!gameOver) {
+			if ((e.key === 'ArrowLeft' || e.key === 'A' || (activeAbility && e.key === 'a')) && player) {
+				handleDir({ dx: -1, dy: 0 });
 			}
-			if ((e.key === 'ArrowUp' || e.key === 'W') && player) {
-				const attackTarget = game.at({ x: player.x, y: player.y - 1 }).find((e) => e.hp);
-				if (attackTarget) {
-					turnTaken = actions.attack({
-						game,
-						actor: player,
-						target: attackTarget,
-					});
-				} else {
-					turnTaken = actions.move({ game, actor: player, dx: 0, dy: -1 });
-				}
+			if ((e.key === 'ArrowRight' || e.key === 'D' || (activeAbility && e.key === 'd')) && player) {
+				handleDir({ dx: 1, dy: 0 });
 			}
-			if ((e.key === 'ArrowDown' || e.key === 'S') && player) {
-				const attackTarget = game.at({ x: player.x, y: player.y + 1 }).find((e) => e.hp);
-				if (attackTarget) {
-					turnTaken = actions.attack({
-						game,
-						actor: player,
-						target: attackTarget,
-					});
-				} else {
-					turnTaken = actions.move({ game, actor: player, dx: 0, dy: 1 });
-				}
+			if ((e.key === 'ArrowUp' || e.key === 'W' || (activeAbility && e.key === 'w')) && player) {
+				handleDir({ dx: 0, dy: -1 });
 			}
-			if (e.key === 'Z') {
+			if ((e.key === 'ArrowDown' || e.key === 'S' || (activeAbility && e.key === 's')) && player) {
+				handleDir({ dx: 0, dy: 1 });
+			}
+			if (e.key === 'Z' || e.key === '.') {
 				turnTaken = true;
+			}
+			if (e.key === '/' || e.key === '?') {
+				e.preventDefault();
+				arrowsMoveCursor = !arrowsMoveCursor;
+				if (arrowsMoveCursor && player) cursorPos = stripPos(player);
+			}
+			if (e.key === 'Escape') {
+				arrowsMoveCursor = false;
+				if (!cursorPosSetByMouse) {
+					cursorPos = null;
+				}
 			}
 		}
 
@@ -178,7 +200,7 @@
 </Modal>
 
 <div class="flex flex-wrap justify-center">
-	<div class="flex h-screen w-0 max-w-112 shrink grow flex-col p-4">
+	<div class="flex h-screen w-0 shrink grow flex-col p-4">
 		{#if player?.hp?.current}
 			<section class="flex">
 				<h1 class="h6 grow">Floor {level?.current}/{level?.max}</h1>
@@ -190,7 +212,59 @@
 					<StatusBadges entity={player} />
 				</div>
 			</section>
-			<Inventory bind:spelling bind:activeAbility />
+			<Inventory bind:spelling bind:activeAbility bind:cursorPos {executeAbility} />
+			<section class="mt-4">
+				<h2 class="text-lg font-bold">Controls</h2>
+				<ul class="flex flex-col gap-1 text-sm">
+					{#if activeAbility}
+						<li>
+							<Kbd>esc</Kbd>
+							to cancel
+						</li>
+						<li>
+							<Kbd>space</Kbd>
+							or
+							<Kbd>enter</Kbd>
+							to confirm
+						</li>
+						<li>
+							<Kbd>arrows</Kbd>
+							or
+							<Kbd>wasd</Kbd>
+							to move target
+						</li>
+					{:else}
+						<li><Kbd>a-z</Kbd> to "spell"</li>
+						<li>
+							<Kbd>esc</Kbd>
+							to clear
+						</li>
+						<li>
+							<Kbd>space</Kbd>
+							or
+							<Kbd>enter</Kbd>
+							to cast
+						</li>
+						<li>
+							<Kbd>.</Kbd>
+							or
+							<Kbd>shift+z</Kbd>
+							to skip turn
+						</li>
+						<li>
+							<Kbd>arrows</Kbd>
+							or
+							<Kbd>shift+wasd</Kbd>
+							to move {arrowsMoveCursor ? 'cursor' : 'player'}
+						</li>
+						<li>
+							<Kbd>?</Kbd>
+							to toggle inspector mode (arrows move cursor, useful for inspecting creatures if playing
+							with keyboard only)
+						</li>
+					{/if}
+				</ul>
+			</section>
 		{:else}
 			DEAD
 		{/if}
@@ -202,7 +276,8 @@
 		style:width="100vmin"
 		style:height="100vmin"
 		onmouseleave={() => {
-			mousePos = null;
+			cursorPos = null;
+			cursorPosSetByMouse = true;
 		}}
 	>
 		{#each rangeFromTo(0, MAP_HEIGHT) as y}
@@ -218,24 +293,10 @@
 						style:height="{100 / MAP_HEIGHT}vmin"
 						style:font-size="{100 / MAP_WIDTH / 1.5}vmin"
 						onmouseenter={() => {
-							mousePos = { x, y };
+							cursorPos = { x, y };
+							cursorPosSetByMouse = true;
 						}}
-						onclick={() => {
-							if (activeAbility && player) {
-								const success = activeAbility.execute(player, { x, y }, game);
-								if (success) {
-									game.processTurn();
-									for (const letter of (spelling ?? '').toLowerCase().split('')) {
-										if (player?.inventory) {
-											player.inventory[letter as Letter] =
-												(player.inventory[letter as Letter] ?? 1) - 1;
-										}
-									}
-									spelling = '';
-									activeAbility = null;
-								}
-							}
-						}}
+						onclick={executeAbility}
 						oncontextmenu={(e) => {
 							e.preventDefault();
 							activeAbility = null;
@@ -267,6 +328,17 @@
 				{/if}
 			</span>
 		{/each}
+		{#if cursorPos}
+			<span
+				class="border-surface-950-50 pointer-events-none absolute z-100 inline-block border text-center"
+				style:top="{(cursorPos.y / MAP_HEIGHT) * 100}%"
+				style:left="{(cursorPos.x / MAP_WIDTH) * 100}%"
+				style:width="{100 / MAP_WIDTH}vmin"
+				style:height="{100 / MAP_HEIGHT}vmin"
+				style:font-size="{100 / MAP_WIDTH / 1.5}vmin"
+				out:blur
+			></span>
+		{/if}
 		{#each activeEffects.values() as vfx (vfx.id)}
 			{#if vfx.type === 'slash'}
 				<span
@@ -281,8 +353,8 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="flex h-screen w-0 max-w-112 shrink grow flex-col p-4">
+	<div class="flex h-screen w-0 shrink grow flex-col p-4">
 		<p>Creatures:</p>
-		<Creatures {highlighted} bind:hovered {mousePos} />
+		<Creatures {highlighted} bind:hovered mousePos={cursorPos} />
 	</div>
 </div>

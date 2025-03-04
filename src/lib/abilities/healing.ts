@@ -53,7 +53,7 @@ export const snack: Ability = {
 		'torte',
 		'wafer',
 	].sort(),
-	description: 'Create and eat food to heal 5 HP.',
+	description: 'Create and eat food to heal 10 HP.',
 	attributes: { healing: 10 },
 	highlight(actor) {
 		return { guide: [], harm: [], help: actor ? [{ x: actor.x, y: actor.y }] : [] };
@@ -73,10 +73,10 @@ export const snack: Ability = {
 export const treat: Ability = {
 	name: 'treat',
 	synonyms: ['nurse', 'patch'],
-	description: 'Heal any creature 3 HP.',
-	attributes: { healing: 3 },
+	description: 'Grant any creature 4 turns of regen+',
+	attributes: { healing: 5 },
 	highlight(actor, target, game) {
-		if (game.at(target).some((e) => e.hp && !e.statuses?.poisoned)) {
+		if (game.at(target).some((e) => e.hp)) {
 			return { guide: [], harm: [], help: [target] };
 		} else {
 			return { guide: [target], harm: [], help: [] };
@@ -87,7 +87,7 @@ export const treat: Ability = {
 		if (highlights.help.length) {
 			for (const pos of highlights.help) {
 				for (const entity of game.at(pos)) {
-					actions.heal({ target: entity, amount: this.attributes.healing ?? 0 });
+					actions.inflict({ target: entity, status: 'regen+', duration: 4 });
 				}
 			}
 			game.playSfx('magic');

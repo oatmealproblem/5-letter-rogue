@@ -8,7 +8,7 @@ export const shoot: Ability = {
 	name: 'shoot',
 	synonyms: ['snipe'],
 	description: 'Does 5 physical damage to one enemy.',
-	attributes: { physicalDamage: 5 },
+	attributes: { physicalDamage: 10 },
 	highlight(actor, target, game) {
 		if (!actor) return { guide: [], harm: [], help: [] };
 		const line = getLine(actor, target);
@@ -36,7 +36,7 @@ export const shoot: Ability = {
 export const laser: Ability = {
 	name: 'laser',
 	description: 'Does 1 magic damage to everything in a beam.',
-	attributes: { magicDamage: 1 },
+	attributes: { magicDamage: 2 },
 	highlight(actor, target, game) {
 		if (!actor) return { guide: [], harm: [], help: [] };
 		const guide = getRay(actor, target);
