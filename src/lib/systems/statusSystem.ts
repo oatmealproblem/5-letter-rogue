@@ -8,10 +8,10 @@ export function statusSystem(game: Game) {
 			if (key === 'bleeding' && entity.statuses[key] && entity.hp) {
 				actions.damage({ game, target: entity, amount: 1, type: 'raw' });
 			}
-			if (key === 'rejuvenating' && entity.statuses[key] && entity.hp) {
+			if (key === 'regen' && entity.statuses[key] && entity.hp) {
 				actions.heal({ target: entity, amount: entity.hp.max * 0.1 });
 			}
-			if (key === 'regenerating' && entity.statuses[key] && entity.hp) {
+			if (key === 'regen+' && entity.statuses[key] && entity.hp) {
 				actions.heal({ target: entity, amount: entity.hp.max * 0.21 });
 			}
 			if (typeof entity.statuses[key] === 'number') {

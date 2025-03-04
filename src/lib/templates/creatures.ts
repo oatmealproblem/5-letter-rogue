@@ -1,6 +1,19 @@
 import type { Template } from '$lib/types';
 
 export const creatures = {
+	druid: {
+		name: 'druid',
+		description: 'Attacks for 0 damage and 2 turns of poison. Summons animals.',
+		ai: {
+			abilities: [{ ability: 'druidSummon', cooldown: 10, countsAsTurn: true, currentCooldown: 5 }],
+		},
+		attack: { damage: 0, inflicts: { poisoned: 2 } },
+		glyph: { char: 'D', class: 'font-creature text-green-300 z-50' },
+		hp: { current: 4, max: 4 },
+		statuses: {},
+		team: 'enemy',
+		threat: 4,
+	},
 	dwarf: {
 		name: 'dwarf',
 		description: 'Attacks for 1 damage. Can move and attack. Armored.',
@@ -64,13 +77,26 @@ export const creatures = {
 		attack: { damage: 3 },
 		glyph: { char: 'H', class: 'font-creature text-fuchsia-400 z-50' },
 		hp: { current: 12, max: 12 },
-		statuses: { regenerating: true },
+		statuses: { 'regen+': true },
 		team: 'enemy',
 		threat: 10,
 	},
+	siren: {
+		name: 'siren',
+		description: "Attacks for 1 damage. Occasionally charms creatures to it's side.",
+		ai: {
+			abilities: [{ ability: 'sirenCharm', countsAsTurn: true, cooldown: 10, currentCooldown: 10 }],
+		},
+		attack: { damage: 1 },
+		glyph: { char: 'S', class: 'font-creature text-pink-500 z-50' },
+		hp: { current: 3, max: 3 },
+		statuses: {},
+		team: 'enemy',
+		threat: 3,
+	},
 	slime: {
 		name: 'slime',
-		description: 'Attacks for 1 damage; slowly heals and splits',
+		description: 'Attacks for 1 damage. Slowly heals and splits.',
 		ai: {
 			abilities: [
 				{
@@ -84,7 +110,7 @@ export const creatures = {
 		attack: { damage: 1 },
 		glyph: { char: 'S', class: 'font-creature text-lime-400 z-50' },
 		hp: { current: 2, max: 2 },
-		statuses: { rejuvenating: true },
+		statuses: { regen: true },
 		team: 'enemy',
 		threat: 3,
 	},
@@ -118,7 +144,7 @@ export const creatures = {
 		attack: { damage: 2 },
 		glyph: { char: 'T', class: 'font-creature text-teal-500 z-50' },
 		hp: { current: 10, max: 10 },
-		statuses: { rejuvenating: true },
+		statuses: { regen: true },
 		team: 'enemy',
 		threat: 5,
 	},

@@ -34,11 +34,11 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 		classification: 'positive',
 		description: 'Cannot be charmed',
 	},
-	rejuvenating: {
+	regen: {
 		classification: 'positive',
 		description: 'Heals 10% every turn',
 	},
-	regenerating: {
+	'regen+': {
 		classification: 'positive',
 		description: 'Heals 25% every turn',
 	},

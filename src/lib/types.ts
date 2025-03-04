@@ -99,8 +99,8 @@ export interface Statuses {
 	immobilized?: true | number;
 	loyal?: true | number;
 	poisoned?: true | number;
-	rejuvenating?: true | number;
-	regenerating?: true | number;
+	regen?: true | number;
+	'regen+'?: true | number;
 	stunned?: true | number;
 }
 export type Status = keyof Statuses;

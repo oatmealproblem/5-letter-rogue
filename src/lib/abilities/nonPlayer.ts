@@ -2,10 +2,13 @@ import { RNG } from 'rot-js';
 
 import { damage } from '$lib/actions/damage';
 import { inflict } from '$lib/actions/inflict';
+import { getChebyshevDistance, getManhattanDistance, getPosInRange, isOutOfBounds } from '$lib/geo';
+import { createFromTemplate, type TemplateId, templates } from '$lib/templates';
 import type { Ability } from '$lib/types';
 
 import { split } from './clone';
 import { exile } from './exile';
+import { charm } from './team';
 import { isEntity } from './utils';
 
 export const waterOnEnter: Ability = {
@@ -82,5 +85,62 @@ export const slimeSplit: Ability = {
 			return split.execute(actor, actor, game);
 		}
 		return false;
+	},
+};
+
+export const druidSummon: Ability = {
+	name: 'druidSummon',
+	description: '',
+	attributes: {},
+	highlight() {
+		return { guide: [], harm: [], help: [] };
+	},
+	execute(actor, target, game) {
+		if (!actor) return false;
+		const pos = getPosInRange(actor, 3, 'chebyshev')
+			.filter((pos) => !isOutOfBounds(pos))
+			.sort((a, b) => getChebyshevDistance(actor, a) - getChebyshevDistance(actor, b))
+			.find((pos) => !game.at(pos).some((e) => e.hp || e.aiCost));
+		if (!pos) return false;
+		const options = ['eagle', 'hyena', 'snake', 'tiger'] as const;
+		const level = game.get('level')?.level?.current ?? 1;
+		const template = RNG.getWeightedValue(
+			Object.fromEntries(
+				options.map<[string, number]>((option) => {
+					const threat = templates[option].threat ?? 0;
+					// if level 3, threat -> weight
+					// 1 -> 33
+					// 2 -> 50
+					// 3 ->100
+					// 4 -> 50
+					// 5 -> 25
+					// 6 -> 16
+					let weight = 100;
+					if (threat < level) weight /= level - threat + 1;
+					if (threat > level) weight /= (threat - level) * 2;
+					return [option, weight];
+				}),
+			),
+		) as TemplateId;
+		game.add(createFromTemplate(template, { ...pos, team: actor.team }));
+		return true;
+	},
+};
+
+export const sirenCharm: Ability = {
+	name: 'sirenCharm',
+	description: '',
+	attributes: {},
+	highlight() {
+		return { guide: [], harm: [], help: [] };
+	},
+	execute(actor, target, game) {
+		if (!actor) return false;
+		const targetEntity = game
+			.with('ai')
+			.filter((e) => e.team !== actor.team && !e.statuses?.loyal)
+			.sort((a, b) => getManhattanDistance(actor, a) - getManhattanDistance(actor, b))[0];
+		if (!targetEntity) return false;
+		return charm.execute(actor, targetEntity, game);
 	},
 };
