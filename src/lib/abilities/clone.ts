@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import actions from '$lib/actions';
-import { getChebyshevDistance, getPosInRange } from '$lib/geo';
+import { getChebyshevDistance, getPosInRange, isOutOfBounds } from '$lib/geo';
 import type { Ability } from '$lib/types';
 
 import { deepClone, getTargetEntities, has } from './utils';
@@ -25,6 +25,7 @@ export const clone: Ability = {
 		if (targets.length) {
 			for (const entity of targets) {
 				const pos = getPosInRange(entity, 3, 'chebyshev')
+					.filter((pos) => !isOutOfBounds(pos))
 					.sort((a, b) => getChebyshevDistance(entity, a) - getChebyshevDistance(entity, b))
 					.find((pos) => !game.at(pos).some((e) => e.hp || e.aiCost));
 				if (!pos) continue;
@@ -58,6 +59,7 @@ export const split: Ability = {
 		if (targets.length) {
 			for (const entity of targets) {
 				const pos = getPosInRange(entity, 3, 'chebyshev')
+					.filter((pos) => !isOutOfBounds(pos))
 					.sort((a, b) => getChebyshevDistance(entity, a) - getChebyshevDistance(entity, b))
 					.find((pos) => !game.at(pos).some((e) => e.hp || e.aiCost));
 				if (!pos) continue;
