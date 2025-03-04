@@ -6,8 +6,8 @@ import type { SetRequired } from 'type-fest';
 import { letterWeights } from './abilities';
 import { playSound, type SoundId } from './audio';
 import { LETTERS } from './constants';
-import { getPosInRange, isSamePos } from './geo';
-import { rangeFromTo } from './math';
+import { CARDINAL_DIRECTIONS, getPosInRange, isSamePos } from './geo';
+import { fib, rangeFromTo } from './math';
 import { aiSystem } from './systems/aiSystem';
 import { statusSystem } from './systems/statusSystem';
 import { turnEndSystem } from './systems/turnEndSystem';
@@ -203,10 +203,12 @@ export class Game {
 			description: 'This is you.',
 			x: 7,
 			y: 7,
-			attack: { damage: 1 },
+			attack: { damage: 2 },
 			glyph: { char: '@', class: 'font-creature text-white z-50' },
-			hp: { current: 10, max: 10 },
-			inventory: Object.fromEntries(LETTERS.map((l) => [l, 1])),
+			hp: { current: 15, max: 15 },
+			inventory: Object.fromEntries(
+				LETTERS.map((l) => [l, Math.ceil((letterWeights[l] ?? 0) / 20)]),
+			),
 			player: true,
 			statuses: {},
 			team: 'player',
@@ -251,11 +253,19 @@ export class Game {
 		// terrain
 		const terrainList = Object.keys(terrain) as TemplateId[];
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		for (const _ of rangeFromTo(0, Math.floor(emptyPositions.length * 0.1))) {
+		for (const _ of rangeFromTo(0, Math.floor(emptyPositions.length * 0.05))) {
 			const pos = emptyPositions.pop();
 			const terrainTemplateId = RNG.getItem(terrainList);
 			if (pos && terrainTemplateId) {
 				this.add(createFromTemplate(terrainTemplateId, pos));
+				for (const dir of CARDINAL_DIRECTIONS) {
+					const posToDir = { x: pos.x + dir.dx, y: pos.y + dir.dy };
+					const emptyPosIndex = emptyPositions.findIndex(isSamePos(posToDir));
+					if (emptyPosIndex !== -1 && RNG.getUniform() < 0.25) {
+						emptyPositions.splice(emptyPosIndex, 1);
+						this.add(createFromTemplate(terrainTemplateId, posToDir));
+					}
+				}
 			}
 		}
 
@@ -281,7 +291,7 @@ export class Game {
 		level.level.exiles = [];
 
 		// enemies
-		const targetThreat = level.level.current * 5;
+		const targetThreat = fib(level.level.current + 1);
 		let currentThreat = 0;
 		let threatIterations = 0;
 		const threatTemplates = Object.entries(templates).filter(([, template]) => template.threat);
@@ -290,7 +300,7 @@ export class Game {
 			const weightedOptions = Object.fromEntries(
 				threatTemplates
 					.filter(([, template]) => (template.threat ?? 0) <= targetThreat - currentThreat)
-					.map(([id, template]) => [id, template.threat ?? 0]),
+					.map(([id, template]) => [id, Math.sqrt(template.threat ?? 0)]),
 			);
 			const templateId = RNG.getWeightedValue(weightedOptions);
 			const pos = emptyPositions.pop();
@@ -309,6 +319,8 @@ export class Game {
 				this.add(createFromTemplate(letter as Letter, pos));
 			}
 		}
+
+		this.save();
 	}
 }
 

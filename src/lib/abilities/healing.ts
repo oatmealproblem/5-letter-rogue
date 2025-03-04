@@ -54,7 +54,7 @@ export const snack: Ability = {
 		'wafer',
 	].sort(),
 	description: 'Create and eat food to heal 5 HP.',
-	attributes: { healing: 5 },
+	attributes: { healing: 10 },
 	highlight(actor) {
 		return { guide: [], harm: [], help: actor ? [{ x: actor.x, y: actor.y }] : [] };
 	},

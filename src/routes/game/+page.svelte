@@ -146,7 +146,7 @@
 	backdropClasses="backdrop-blur-sm"
 >
 	{#snippet content()}
-		{#if victory && level?.current === level?.max}
+		{#if victory && (level?.current ?? 1) >= (level?.max ?? 1)}
 			Victory! You have survived the dungeon!
 		{:else if victory}
 			Floor cleared! All enemies defeated or befriended
