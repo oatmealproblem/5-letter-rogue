@@ -6,9 +6,7 @@
 
 {#each Object.entries(STATUS_METADATA).toSorted( (a, b) => a[0].localeCompare(b[0]), ) as [status, meta] (status)}
 	<section class="card bg-surface-100-900 p-4">
-		<header>
-			<h2 class="h4">{status}</h2>
-			{meta.description}
-		</header>
+		<h2 class="h4">{status}</h2>
+		{meta.description}
 	</section>
 {/each}
