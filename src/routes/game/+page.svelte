@@ -180,7 +180,7 @@
 <div class="flex flex-wrap justify-center">
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="bg-surface-50-950 animated relative flex flex-col"
+		class="bg-surface-50-950 animated relative flex flex-col overflow-hidden"
 		style:width="100vmin"
 		style:height="100vmin"
 		onmouseleave={() => {

@@ -16,7 +16,7 @@ export const creatures = {
 	},
 	dwarf: {
 		name: 'dwarf',
-		description: 'Attacks for 1 damage. Can move and attack. Armored.',
+		description: 'Attacks for 2 damage. Armored.',
 		ai: { abilities: [] },
 		attack: { damage: 1 },
 		glyph: { char: 'D', class: 'font-creature text-stone-400 z-50' },
@@ -35,6 +35,27 @@ export const creatures = {
 		statuses: { floating: true },
 		team: 'enemy',
 		threat: 1,
+	},
+	fiend: {
+		name: 'fiend',
+		synonyms: ['demon', 'devil'],
+		description: 'Creates flames beneath adjacent enemies',
+		ai: {
+			abilities: [
+				{
+					ability: 'fiendFlame',
+					cooldown: 0,
+					currentCooldown: 0,
+					countsAsTurn: true,
+				},
+			],
+		},
+		attack: { damage: 1 },
+		glyph: { char: 'F', class: 'font-creature text-red-400 z-50' },
+		hp: { current: 4, max: 4 },
+		statuses: {},
+		team: 'enemy',
+		threat: 3,
 	},
 	giant: {
 		name: 'giant',

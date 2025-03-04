@@ -123,6 +123,7 @@ export interface Entity {
 	name?: string;
 	player?: true;
 	team?: string;
+	terrain?: true;
 	threat?: number;
 	statuses?: Statuses;
 	synonyms?: string[];

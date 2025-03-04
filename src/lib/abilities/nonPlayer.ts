@@ -1,5 +1,6 @@
 import { RNG } from 'rot-js';
 
+import actions from '$lib/actions';
 import { damage } from '$lib/actions/damage';
 import { inflict } from '$lib/actions/inflict';
 import { getChebyshevDistance, getManhattanDistance, getPosInRange, isOutOfBounds } from '$lib/geo';
@@ -9,7 +10,7 @@ import type { Ability } from '$lib/types';
 import { split } from './clone';
 import { exile } from './exile';
 import { charm } from './team';
-import { isEntity } from './utils';
+import { has, isEntity } from './utils';
 
 export const waterOnEnter: Ability = {
 	name: 'waterOnEnter',
@@ -142,5 +143,28 @@ export const sirenCharm: Ability = {
 			.sort((a, b) => getManhattanDistance(actor, a) - getManhattanDistance(actor, b))[0];
 		if (!targetEntity) return false;
 		return charm.execute(actor, targetEntity, game);
+	},
+};
+
+export const fiendFlame: Ability = {
+	name: 'fiendFlame',
+	description: '',
+	attributes: {},
+	highlight() {
+		return { guide: [], harm: [], help: [] };
+	},
+	execute(actor, target, game) {
+		if (!actor) return false;
+		const targetEntity = game
+			.with('team', 'hp')
+			.filter((e) => e.team !== actor.team && getManhattanDistance(actor, e) === 1)
+			.sort((a, b) => getManhattanDistance(actor, a) - getManhattanDistance(actor, b))[0];
+		if (!targetEntity) return false;
+		if (targetEntity.statuses?.hidden) return false;
+		actions.attack({ actor, target: targetEntity, game });
+		if (!game.at(targetEntity).some(has('terrain'))) {
+			game.add(createFromTemplate('flame', { x: targetEntity.x, y: targetEntity.y }));
+		}
+		return true;
 	},
 };

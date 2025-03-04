@@ -11,6 +11,7 @@ export const terrain = {
 		onEnter: 'abyssOnEnter',
 		onTurnEnd: 'abyssOnEnter',
 		aiCost: Infinity,
+		terrain: true,
 	},
 	flame: {
 		name: 'flame',
@@ -21,6 +22,7 @@ export const terrain = {
 		},
 		onTurnEnd: 'flameOnTurnEnd',
 		aiCost: 3,
+		terrain: true,
 	},
 	water: {
 		name: 'water',
@@ -31,5 +33,6 @@ export const terrain = {
 		},
 		onEnter: 'waterOnEnter',
 		aiCost: 1,
+		terrain: true,
 	},
 } satisfies Record<string, Template>;
