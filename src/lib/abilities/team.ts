@@ -68,7 +68,7 @@ export const thank: Ability = {
 		'Make an ally loyal for 50 turns (they cannot be charmed and will follow across levels)',
 	attributes: {},
 	highlight(actor, target, game) {
-		if (game.at(target).some((e) => e.team === actor?.team && e.statuses && !e?.statuses.loyal)) {
+		if (game.at(target).some((e) => e.team === actor?.team && e.statuses)) {
 			return { guide: [], harm: [], help: [stripPos(target)] };
 		} else {
 			return { guide: [stripPos(target)], harm: [], help: [] };
@@ -76,7 +76,7 @@ export const thank: Ability = {
 	},
 	execute(actor, target, game) {
 		const targets = getTargetEntities({ actor, target, game, kind: 'help', ability: this }).filter(
-			(e) => e.team === actor?.team && e.statuses && !e?.statuses.loyal,
+			(e) => e.team === actor?.team && e.statuses,
 		);
 		if (targets.length) {
 			for (const entity of targets) {
