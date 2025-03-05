@@ -23,6 +23,7 @@ export const charm: Ability = {
 		if (targets.length) {
 			for (const entity of targets) {
 				entity.team = actor?.team;
+				game.playVfx('bad-magic', entity);
 			}
 			game.playSfx('magic');
 			return true;
@@ -52,6 +53,7 @@ export const frame: Ability = {
 		if (targets.length) {
 			for (const entity of targets) {
 				entity.team = entity.id;
+				game.playVfx('bad-magic', entity);
 			}
 			game.playSfx('magic');
 			return true;
@@ -81,6 +83,7 @@ export const thank: Ability = {
 		if (targets.length) {
 			for (const entity of targets) {
 				inflict({ target: entity, status: 'loyal', duration: 50 });
+				game.playVfx('good-magic', entity);
 			}
 			game.playSfx('magic');
 			return true;

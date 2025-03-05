@@ -20,6 +20,7 @@ export function createSummonAbility(templateId: TemplateId): Ability {
 			const highlights = this.highlight(actor, target, game);
 			if (highlights.help.length) {
 				game.add(createFromTemplate(templateId, { x: target.x, y: target.y, team: actor?.team }));
+				game.playVfx('good-magic', target);
 				game.playSfx('magic');
 				return true;
 			} else {

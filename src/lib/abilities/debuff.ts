@@ -24,6 +24,7 @@ export const curse: Ability = {
 					for (const status of POSITIVE_STATUSES.values()) {
 						delete entity.statuses[status];
 					}
+					game.playVfx('bad-magic', entity);
 				}
 			}
 			game.playSfx('magic');
@@ -52,6 +53,7 @@ export const sting: Ability = {
 		if (targets.length) {
 			for (const entity of targets) {
 				inflict({ target: entity, status: 'poisoned', duration: this.attributes.duration ?? 0 });
+				game.playVfx('bad-magic', entity);
 			}
 			game.playSfx('magic');
 			return true;

@@ -24,6 +24,7 @@ export const sneak: Ability = {
 					status: 'hidden',
 					duration: (this.attributes.duration ?? 0) + 1,
 				});
+				game.playVfx('good-magic', entity);
 			}
 			game.playSfx('magic');
 			return true;

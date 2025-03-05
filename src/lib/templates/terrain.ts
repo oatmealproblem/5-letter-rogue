@@ -5,7 +5,7 @@ export const terrain = {
 		name: 'abyss',
 		description: 'Fall to the next level, losing half your current health.',
 		glyph: {
-			char: 'A',
+			char: '↓',
 			class: 'bg-black text-gray-800 font-terrain',
 		},
 		onEnter: 'abyssOnEnter',
@@ -17,7 +17,7 @@ export const terrain = {
 		name: 'flame',
 		description: 'Deals 1 magic damage each turn.',
 		glyph: {
-			char: 'F',
+			char: '🔥',
 			class: 'bg-orange-950 text-orange-600 font-terrain',
 		},
 		onTurnEnd: 'flameOnTurnEnd',
@@ -28,7 +28,7 @@ export const terrain = {
 		name: 'water',
 		description: 'Immobilizes non-swimming creatures for 1 turn.',
 		glyph: {
-			char: 'W',
+			char: '',
 			class: 'bg-blue-950 text-blue-700 font-terrain',
 		},
 		onEnter: 'waterOnEnter',

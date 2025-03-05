@@ -35,6 +35,7 @@ export const clone: Ability = {
 					id: `${entity.name}-${nanoid(12)}`,
 				};
 				game.add(copy);
+				game.playVfx('good-magic', copy);
 			}
 			game.playSfx('magic');
 			return true;
@@ -77,6 +78,7 @@ export const split: Ability = {
 					id: `${entity.name}-${nanoid(12)}`,
 				};
 				game.add(copy);
+				game.playVfx('good-magic', copy);
 			}
 			game.playSfx('magic');
 			return true;

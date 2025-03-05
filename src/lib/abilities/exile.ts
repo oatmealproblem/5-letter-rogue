@@ -23,6 +23,7 @@ export const exile: Ability = {
 						if (level?.level) {
 							level.level.exiles.push(entity);
 						}
+						if (actor?.player || actor?.ai) game.playVfx('bad-magic', entity);
 					}
 				}
 			}

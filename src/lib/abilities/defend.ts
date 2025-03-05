@@ -25,6 +25,7 @@ export const block: Ability = {
 					status: 'armored',
 					duration: (this.attributes.duration ?? 0) + 1,
 				});
+				game.playVfx('good-magic', entity);
 			}
 			game.playSfx('magic');
 			return true;

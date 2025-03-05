@@ -61,7 +61,12 @@ export const snack: Ability = {
 	execute(actor, targetPos, game) {
 		if (actor && actor.hp && actor.hp.current < actor.hp.max) {
 			const success = actions.heal({ target: actor, amount: this.attributes.healing ?? 0 });
-			game.playSfx(success ? 'magic' : 'uiError');
+			if (success) {
+				game.playVfx('good-magic', actor);
+				game.playSfx('magic');
+			} else {
+				game.playSfx('uiError');
+			}
 			return success;
 		} else {
 			game.playSfx('uiError');
@@ -88,6 +93,7 @@ export const treat: Ability = {
 			for (const pos of highlights.help) {
 				for (const entity of game.at(pos)) {
 					actions.inflict({ target: entity, status: 'regen+', duration: 4 });
+					game.playVfx('good-magic', entity);
 				}
 			}
 			game.playSfx('magic');
@@ -121,6 +127,7 @@ export const detox: Ability = {
 						for (const status of NEGATIVE_STATUSES.values()) {
 							delete entity.statuses[status];
 						}
+						game.playVfx('good-magic', entity);
 					}
 				}
 			}

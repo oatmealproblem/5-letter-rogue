@@ -99,6 +99,7 @@ export const float: Ability = {
 					status: 'floating',
 					duration: (this.attributes.duration ?? 0) + 1,
 				});
+				game.playVfx('good-magic', entity);
 			}
 			game.playSfx('magic');
 			return true;

@@ -2,7 +2,7 @@ import actions from '$lib/actions';
 import { getLine, getRay } from '$lib/geo';
 import type { Ability } from '$lib/types';
 
-import { getTargetEntities } from './utils';
+import { getTargetEntities, has } from './utils';
 
 export const shoot: Ability = {
 	name: 'shoot',
@@ -20,13 +20,14 @@ export const shoot: Ability = {
 	execute(actor, target, game) {
 		game.playSfx('laser');
 		for (const pos of this.highlight(actor, target, game).harm) {
-			for (const entity of game.at(pos)) {
+			for (const entity of game.at(pos).filter(has('hp'))) {
 				actions.damage({
 					game,
 					target: entity,
 					amount: this.attributes.physicalDamage ?? 0,
 					type: 'physical',
 				});
+				game.playVfx('slash', entity);
 			}
 		}
 		return true;
@@ -45,13 +46,14 @@ export const laser: Ability = {
 	},
 	execute(actor, target, game) {
 		for (const pos of getTargetEntities({ ability: this, kind: 'harm', actor, target, game })) {
-			for (const entity of game.at(pos)) {
+			for (const entity of game.at(pos).filter(has('hp'))) {
 				actions.damage({
 					game,
 					target: entity,
 					amount: this.attributes.magicDamage ?? 0,
 					type: 'magic',
 				});
+				game.playVfx('slash', entity);
 			}
 		}
 		game.playSfx('laser');

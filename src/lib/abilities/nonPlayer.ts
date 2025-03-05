@@ -124,6 +124,7 @@ export const druidSummon: Ability = {
 			),
 		) as TemplateId;
 		game.add(createFromTemplate(template, { ...pos, team: actor.team }));
+		game.playVfx('good-magic', pos);
 		return true;
 	},
 };

@@ -2,7 +2,7 @@
 	import { Modal } from '@skeletonlabs/skeleton-svelte';
 	import { quadIn, quadOut } from 'svelte/easing';
 	import { SvelteMap } from 'svelte/reactivity';
-	import { blur, fly } from 'svelte/transition';
+	import { blur, fly, scale } from 'svelte/transition';
 
 	import actions from '$lib/actions';
 	import { playSound } from '$lib/audio';
@@ -48,7 +48,7 @@
 				setTimeout(() => bumps.delete(id), 100);
 			} else if (!activeEffects.has(vfx)) {
 				activeEffects.set(id, { id, type: vfx, pos });
-				setTimeout(() => activeEffects.delete(id), 250);
+				setTimeout(() => activeEffects.delete(id), vfx === 'slash' ? 250 : 50);
 			}
 		}),
 	);
@@ -95,6 +95,10 @@
 		}
 	}
 </script>
+
+<svelte:head>
+	<title>5 Letter Rogue</title>
+</svelte:head>
 
 <svelte:window
 	onkeydown={(e) => {
@@ -349,6 +353,28 @@
 					out:fly|global={{ x: -10, y: 30, easing: quadOut, duration: 250 }}
 				>
 					/
+				</span>
+			{/if}
+			{#if vfx.type === 'good-magic'}
+				<span
+					{...getVfxAttributes(vfx.pos)}
+					style:font-family="Kablammo"
+					class:z-100={true}
+					class:text-secondary-500={true}
+					out:scale|global={{ start: 2, opacity: 0, duration: 1000 }}
+				>
+					✨
+				</span>
+			{/if}
+			{#if vfx.type === 'bad-magic'}
+				<span
+					{...getVfxAttributes(vfx.pos)}
+					style:font-family="Kablammo"
+					class:z-100={true}
+					class:text-error-500={true}
+					out:scale|global={{ start: 2, opacity: 0, duration: 1000 }}
+				>
+					
 				</span>
 			{/if}
 		{/each}
