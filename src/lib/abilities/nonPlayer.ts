@@ -68,7 +68,6 @@ export const flameOnTurnEnd: Ability = {
 		for (const entity of game.at(target)) {
 			if (!entity.statuses?.floating) {
 				damage({ game, target: entity, amount: 1, type: 'magic' });
-				game.playSfx('fire');
 			}
 		}
 		return true;
@@ -126,6 +125,7 @@ export const druidSummon: Ability = {
 			),
 		) as TemplateId;
 		game.add(createFromTemplate(template, { ...pos, team: actor.team }));
+		game.playSfx('magic');
 		game.playVfx('good-magic', pos);
 		return true;
 	},

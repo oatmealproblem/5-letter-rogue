@@ -28,7 +28,7 @@ export const STATUS_METADATA: Record<Status, StatusMetadata> = {
 	},
 	immobilized: {
 		classification: 'negative',
-		description: 'Prevents movement',
+		description: 'Prevents movement (can still attack and perform abilities)',
 	},
 	loyal: {
 		classification: 'positive',
