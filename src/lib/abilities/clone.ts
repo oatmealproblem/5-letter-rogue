@@ -80,7 +80,7 @@ export const split: Ability = {
 				game.add(copy);
 				game.playVfx('good-magic', copy);
 			}
-			game.playSfx('magic');
+			game.playSfx('slime');
 			return true;
 		} else {
 			game.playSfx('uiError');

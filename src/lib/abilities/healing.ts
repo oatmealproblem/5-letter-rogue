@@ -63,7 +63,7 @@ export const snack: Ability = {
 			const success = actions.heal({ target: actor, amount: this.attributes.healing ?? 0 });
 			if (success) {
 				game.playVfx('good-magic', actor);
-				game.playSfx('magic');
+				game.playSfx('nom');
 			} else {
 				game.playSfx('uiError');
 			}

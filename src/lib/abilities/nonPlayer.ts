@@ -19,9 +19,10 @@ export const waterOnEnter: Ability = {
 	highlight() {
 		return { guide: [], harm: [], help: [] };
 	},
-	execute(actor, target) {
+	execute(actor, target, game) {
 		if (isEntity(target) && !target.statuses?.floating) {
 			inflict({ target, status: 'immobilized', duration: 2 });
+			game.playSfx('water');
 		}
 		return true;
 	},
@@ -67,6 +68,7 @@ export const flameOnTurnEnd: Ability = {
 		for (const entity of game.at(target)) {
 			if (!entity.statuses?.floating) {
 				damage({ game, target: entity, amount: 1, type: 'magic' });
+				game.playSfx('fire');
 			}
 		}
 		return true;

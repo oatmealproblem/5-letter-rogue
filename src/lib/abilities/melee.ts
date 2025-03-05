@@ -97,6 +97,7 @@ export const slice: Ability = {
 					});
 				}
 			}
+			game.playSfx('knifeSlice');
 			return true;
 		} else {
 			game.playSfx('uiError');
@@ -143,6 +144,7 @@ export const wound: Ability = {
 					});
 				}
 			}
+			game.playSfx('knifeSlice');
 			return true;
 		} else {
 			game.playSfx('uiError');

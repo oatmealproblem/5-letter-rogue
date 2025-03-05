@@ -20,7 +20,7 @@ export function attack({
 		if (target.statuses?.dodging) {
 			game.playVfx('slash', target);
 			game.playVfx(`bump:${actor.id}`, target);
-			game.playSfx('knifeSlice');
+			game.playSfx('miss');
 			return true;
 		}
 

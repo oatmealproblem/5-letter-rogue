@@ -1,23 +1,35 @@
 import { Howl } from 'howler';
 
+import nom from './106392__j1987__carrotnom.webm';
+import fall from './364660__original_sound__whoosh-simpler.webm';
+import magic from './376745__zenithinfinitivestudios__fantasy_ui_button_3.webm';
+import grunt from './446517__usuarioleal__47-auch.webm';
+import miss from './733889__velcronator__whoosh-02.webm';
+import water from './743910__alex_eapo__jump-on-water.webm';
 import uiBack from './back_001.webm';
 import uiClick from './click_001.webm';
 import uiError from './error_005.webm';
 import explosion from './explosionCrunch_000.webm';
 import footstep from './footstep_grass_000.webm';
-import magic from './forceField_004.webm';
 import knifeSlice from './knifeSlice.webm';
 import laser from './laserSmall_000.webm';
+import slime from './slime_000.webm';
 
 const soundUrls = {
 	explosion,
+	fall,
 	footstep,
+	grunt,
 	knifeSlice,
-	magic,
 	laser,
+	magic,
+	miss,
+	nom,
+	slime,
 	uiBack,
 	uiClick,
 	uiError,
+	water,
 };
 
 export type SoundId = keyof typeof soundUrls;

@@ -29,6 +29,8 @@ export function damage({
 		// damage can never be negative
 		resolvedAmount = Math.max(resolvedAmount, 0);
 		target.hp.current -= resolvedAmount;
+		if (resolvedAmount !== 0 && target.player) game.playSfx('grunt');
+
 		if (target.hp.current <= 0) {
 			game.remove(target);
 			if (target.name && target.team !== 'player') {

@@ -14,7 +14,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"convert-audio": "cd src/lib/audio && for i in *.ogg; do ffmpeg -i \"$i\" \"${i%.*}.webm\" && rm \"$i\"; done"
+		"convert-audio": "cd src/lib/audio && for i in *.ogg *.wav; do ffmpeg -i \"$i\" \"${i%.*}.webm\" && rm \"$i\"; done"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",

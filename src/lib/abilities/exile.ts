@@ -24,10 +24,10 @@ export const exile: Ability = {
 							level.level.exiles.push(entity);
 						}
 						if (actor?.player || actor?.ai) game.playVfx('bad-magic', entity);
+						game.playSfx('fall');
 					}
 				}
 			}
-			if (actor?.player || actor?.ai) game.playSfx('magic');
 			return true;
 		} else {
 			if (actor?.player) game.playSfx('uiError');
