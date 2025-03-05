@@ -1,3 +1,4 @@
+import { inflict } from '$lib/actions/inflict';
 import { stripPos } from '$lib/geo';
 import type { Ability } from '$lib/types';
 
@@ -63,7 +64,8 @@ export const frame: Ability = {
 
 export const thank: Ability = {
 	name: 'thank',
-	description: 'Make an ally loyal (they cannot be charmed and will follow across levels)',
+	description:
+		'Make an ally loyal for 50 turns (they cannot be charmed and will follow across levels)',
 	attributes: {},
 	highlight(actor, target, game) {
 		if (game.at(target).some((e) => e.team === actor?.team && e.statuses && !e?.statuses.loyal)) {
@@ -78,7 +80,7 @@ export const thank: Ability = {
 		);
 		if (targets.length) {
 			for (const entity of targets) {
-				if (entity.statuses) entity.statuses.loyal = true;
+				inflict({ target: entity, status: 'loyal', duration: 50 });
 			}
 			game.playSfx('magic');
 			return true;

@@ -35,8 +35,8 @@ export const shoot: Ability = {
 
 export const laser: Ability = {
 	name: 'laser',
-	description: 'Does 1 magic damage to everything in a beam.',
-	attributes: { magicDamage: 2 },
+	description: 'Does 3 magic damage to everything in a beam.',
+	attributes: { magicDamage: 3 },
 	highlight(actor, target, game) {
 		if (!actor) return { guide: [], harm: [], help: [] };
 		const guide = getRay(actor, target);

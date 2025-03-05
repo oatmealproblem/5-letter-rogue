@@ -1,0 +1,38 @@
+<svg width="630" height="500" viewBox="0 0 630 500">
+	<rect width="630" height="500" fill="#131313" />
+	<path
+		id="FiveLetterPath"
+		fill="none"
+		d="M 315,250 L 180,250 A 115,130 0,0,1 450,250 L 315,250 Z"
+	/>
+	<text font-family="Ubuntu" font-size="80" fill="#9977f8" letter-spacing="-3">
+		<textPath href="#FiveLetterPath" text-anchor="middle" startOffset="50%">Five Letter</textPath>
+	</text>
+	<text
+		font-family="Kablammo"
+		font-size="250"
+		x="315"
+		y="220"
+		text-anchor="middle"
+		dominant-baseline="central"
+		fill="white"
+	>
+		@
+	</text>
+	<text
+		font-family="Kablammo"
+		font-size="125"
+		x="315"
+		y="400"
+		text-anchor="middle"
+		dominant-baseline="central"
+		fill="#42fecf"
+		letter-spacing="-5"
+	>
+		<tspan>R</tspan>
+		<tspan fill="#d8f30f">O</tspan>
+		<tspan fill="#89f975">G</tspan>
+		<tspan fill="#e1aacc">U</tspan>
+		<tspan fill="#ff7850">E</tspan>
+	</text>
+</svg>

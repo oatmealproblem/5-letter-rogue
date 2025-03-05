@@ -37,9 +37,9 @@ export const blink: Ability = {
 export const vault: Ability = {
 	name: 'vault',
 	synonyms: ['bound'],
-	description: 'jump to any space in a 4-tile radius and attack everything in the path',
+	description: 'jump to any space in a 5-tile radius and attack everything in the path',
 	attributes: {
-		radius: 4,
+		radius: 5,
 	},
 	highlight(actor, target, game) {
 		if (!actor) return { guide: [], harm: [], help: [] };
@@ -81,8 +81,8 @@ export const vault: Ability = {
 export const float: Ability = {
 	name: 'float',
 	synonyms: ['glide', 'hover'],
-	description: 'Float for 5 turns, unaffected by terrain.',
-	attributes: { duration: 5 },
+	description: 'Float for 10 turns, unaffected by terrain.',
+	attributes: { duration: 10 },
 	highlight(actor, target, game) {
 		if (game.at(target).some((e) => e.statuses)) {
 			return { guide: [], harm: [], help: [target] };

@@ -153,10 +153,10 @@ export const wound: Ability = {
 
 export const brawl: Ability = {
 	name: 'brawl',
-	synonyms: ['punch', 'melee', 'smack'],
-	description: 'Attack an enemy and stun them for a turn',
+	synonyms: ['crush', 'melee', 'punch', 'smack'],
+	description: 'Attack an enemy and stun them for 3 turns',
 	attributes: {
-		duration: 1,
+		duration: 3,
 	},
 	highlight(actor, target, game) {
 		if (!actor) return { guide: [], harm: [], help: [] };
@@ -198,7 +198,7 @@ export const brawl: Ability = {
 
 export const shove: Ability = {
 	name: 'shove',
-	synonyms: ['crush', 'pound', 'smash'],
+	synonyms: ['pound', 'smash'],
 	description: 'Attack an enemy and push up to 2 spaces back',
 	attributes: {},
 	highlight(actor, target, game) {

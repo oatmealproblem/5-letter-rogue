@@ -106,11 +106,11 @@ export const creatures = {
 		name: 'siren',
 		description: "Attacks for 1 damage. Occasionally charms creatures to it's side.",
 		ai: {
-			abilities: [{ ability: 'sirenCharm', countsAsTurn: true, cooldown: 10, currentCooldown: 10 }],
+			abilities: [{ ability: 'sirenCharm', countsAsTurn: true, cooldown: 10, currentCooldown: 5 }],
 		},
 		attack: { damage: 1 },
 		glyph: { char: 'S', class: 'font-creature text-pink-500 z-50' },
-		hp: { current: 3, max: 3 },
+		hp: { current: 5, max: 5 },
 		statuses: {},
 		team: 'enemy',
 		threat: 3,

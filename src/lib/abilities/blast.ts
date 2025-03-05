@@ -5,8 +5,8 @@ import type { Ability } from '$lib/types';
 export const blast: Ability = {
 	name: 'blast',
 	synonyms: ['burst'],
-	description: 'Does 2 physical damage in a 1 tile radius.',
-	attributes: { physicalDamage: 2, radius: 1 },
+	description: 'Does 4 physical damage in a 1 tile radius.',
+	attributes: { physicalDamage: 4, radius: 1 },
 	highlight(actor, target, game) {
 		const guide = getPosInRange(target, this.attributes.radius ?? 0, 'euclidean');
 		const harm = guide.filter((p) => game.at(p).some((e) => e.hp));
