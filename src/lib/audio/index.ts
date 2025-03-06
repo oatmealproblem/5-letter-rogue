@@ -13,7 +13,10 @@ import explosion from './explosionCrunch_000.webm';
 import footstep from './footstep_grass_000.webm';
 import knifeSlice from './knifeSlice.webm';
 import laser from './laserSmall_000.webm';
+import musicUrl from './music.webm';
 import slime from './slime_000.webm';
+
+Howler.volume(0.5);
 
 const soundUrls = {
 	explosion,
@@ -43,6 +46,25 @@ const sounds = Object.fromEntries(
 export function playSound(sound: SoundId) {
 	sounds[sound]?.();
 }
+
+const music = new Howl({ src: musicUrl });
+export function playMusic() {
+	music.play();
+	const loopTo = 89.744;
+
+	const id = music.play();
+	music.volume(1, id);
+
+	music.on(
+		'end',
+		() => {
+			music.seek(loopTo, id);
+			music.play(id);
+		},
+		id,
+	);
+}
+playMusic();
 
 function throttle<Args extends unknown[]>(
 	func: (...args: Args) => void,
