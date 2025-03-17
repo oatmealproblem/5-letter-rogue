@@ -21,7 +21,7 @@
 
 	let spelling = $state<string>('');
 	let activeAbility = $state.raw<null | Ability>(null);
-	let arrowsMoveCursor = $state(true); // what do arrows move
+	let arrowsMoveCursor = $state(false); // what do arrows move
 	let cursorPos = $state<null | Pos>(null);
 	let cursorPosSetByMouse = $state(false);
 	let player = $derived(game.get('player'));
