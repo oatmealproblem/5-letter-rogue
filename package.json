@@ -2,7 +2,7 @@
 	"name": "5-letter-rogue",
 	"private": true,
 	"license": "AGPL-3.0-or-later",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
