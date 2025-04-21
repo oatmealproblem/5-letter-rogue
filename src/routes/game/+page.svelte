@@ -204,7 +204,7 @@
 </Modal>
 
 <div class="flex flex-wrap justify-center">
-	<div class="flex h-screen w-0 shrink grow flex-col p-4">
+	<div class="flex h-screen w-0 shrink grow flex-col overflow-auto p-4">
 		{#if player?.hp?.current}
 			<section class="flex">
 				<h1 class="h6 grow">Floor {level?.current}/{level?.max}</h1>
