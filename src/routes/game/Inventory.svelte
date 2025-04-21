@@ -8,6 +8,7 @@
 	import { stripPos } from '$lib/geo';
 	import { rangeFromTo } from '$lib/math';
 	import type { Ability, Letter, Pos } from '$lib/types';
+	import { Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	interface Props {
 		spelling: string;
@@ -219,7 +220,7 @@
 		<p class="mt-4">Perhaps...</p>
 		{#each suggestions as suggestion (suggestion)}
 			<button
-				class="mt-1 text-start text-sm"
+				class="rounded-base hover:preset-filled box -mx-2 mt-1 box-content w-full px-2 text-start text-sm"
 				onclick={() => {
 					spelling = suggestion;
 					cast();
