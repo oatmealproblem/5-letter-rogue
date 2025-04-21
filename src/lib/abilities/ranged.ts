@@ -7,7 +7,7 @@ import { getTargetEntities, has } from './utils';
 export const shoot: Ability = {
 	name: 'shoot',
 	synonyms: ['snipe'],
-	description: 'Does 5 physical damage to one enemy.',
+	description: 'Does 10 physical damage to one enemy.',
 	attributes: { physicalDamage: 10 },
 	highlight(actor, target, game) {
 		if (!actor) return { guide: [], harm: [], help: [] };
