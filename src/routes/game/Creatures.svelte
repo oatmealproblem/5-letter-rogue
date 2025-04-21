@@ -2,7 +2,8 @@
 	import { Tooltip } from '@skeletonlabs/skeleton-svelte';
 
 	import { game } from '$lib/game.svelte';
-	import type { Ability, Entity, Pos } from '$lib/types';
+	import { STATUS_METADATA } from '$lib/statuses';
+	import type { Ability, Entity, Pos, Status } from '$lib/types';
 
 	import StatusBadges from './StatusBadges.svelte';
 	import { getHighlightClass } from './utils';
@@ -27,6 +28,12 @@
 		} else {
 			return 'text-warning-700-300';
 		}
+	}
+
+	function getStatusClass(statusType: Status) {
+		if (STATUS_METADATA[statusType].classification === 'negative') return 'preset-tonal-error';
+		if (STATUS_METADATA[statusType].classification === 'positive') return 'preset-tonal-success';
+		return 'preset-tonal-warning';
 	}
 </script>
 
@@ -83,6 +90,18 @@
 				</span>
 				-
 				<span>{entity.description}</span>
+				{#if entity.statuses && Object.values(entity.statuses).filter(Boolean).length}
+					<ul>
+						{#each Object.entries(entity.statuses) as [type, duration]}
+							<li class="ps-8">
+								<span class="{getStatusClass(type as Status)} badge relative -top-1 capitalize">
+									{type}{typeof duration === 'number' ? ` | ${duration}` : ''}
+								</span>
+								<span>{STATUS_METADATA[type as Status].description}</span>
+							</li>
+						{/each}
+					</ul>
+				{/if}
 			</li>
 		{/each}
 	</ul>
